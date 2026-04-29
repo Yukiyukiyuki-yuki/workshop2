@@ -1,0 +1,6051 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yuki's Workshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0f0f0f;
+  --bg-card: #1a1a1a;
+  --bg-card-hover: #222222;
+  --bg-input: #141414;
+  --border: #2a2a2a;
+  --border-accent: #3a3a3a;
+  --text-primary: #e8e4df;
+  --text-secondary: #8a857e;
+  --text-muted: #5a5650;
+  --accent-warm: #d4a574;
+  --accent-warm-dim: #d4a57433;
+  --accent-coral: #c97b6b;
+  --accent-sage: #7a9e7e;
+  --accent-blue: #6b8fc9;
+  --accent-purple: #9b7ec9;
+  --accent-gold: #c9b46b;
+  --danger: #c96b6b;
+  --success: #7ec97a;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 3px; }
+
+/* Header */
+.header {
+  padding: 32px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-primary);
+  backdrop-filter: blur(20px);
+}
+
+.header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.logo {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent-warm);
+  letter-spacing: -0.5px;
+}
+
+.logo-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.header-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-date .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-sage);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Main Layout */
+.main {
+  padding: 32px 48px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 32px;
+  background: var(--bg-card);
+  padding: 4px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.nav-tab {
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+.nav-tab.active {
+  background: var(--accent-warm);
+  color: var(--bg-primary);
+}
+
+.nav-tab .tab-icon {
+  font-size: 16px;
+}
+
+/* Module Panel */
+.module-panel {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.module-panel.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card Styles */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  transition: border-color 0.3s;
+}
+
+.card:hover {
+  border-color: var(--border-accent);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'Space Mono', monospace;
+}
+
+/* Section Title */
+.section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+/* Buttons */
+.btn {
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--accent-warm);
+  color: var(--bg-primary);
+  border-color: var(--accent-warm);
+}
+
+.btn-primary:hover {
+  background: #deb88a;
+  border-color: #deb88a;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 12px;
+}
+
+.btn-danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn-danger:hover {
+  background: var(--danger);
+  color: white;
+}
+
+/* Input */
+input[type="text"], input[type="date"], input[type="time"], textarea, select {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  transition: border-color 0.3s;
+  outline: none;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--accent-warm);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== MODULE 1: CALENDAR ===== */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.cal-event {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-warm);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  transition: all 0.25s;
+}
+
+.cal-event:hover {
+  border-left-color: var(--accent-coral);
+  transform: translateX(4px);
+}
+
+.cal-event .time {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--accent-warm);
+  margin-bottom: 6px;
+}
+
+.cal-event .title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.cal-event .desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.cal-add-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.cal-add-form .full-width {
+  grid-column: 1 / -1;
+}
+
+/* Shimo Integration Notice */
+.integration-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: var(--accent-warm-dim);
+  border: 1px solid var(--accent-warm);
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--accent-warm);
+}
+
+.integration-notice .icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* ===== MODULE 2: POSTER & COPY ===== */
+.copy-gen-area {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.copy-input-section, .copy-output-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.copy-output {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  min-height: 250px;
+  line-height: 1.8;
+  font-size: 14px;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.copy-output.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.copy-output .placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.topic-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.topic-tag {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.topic-tag:hover, .topic-tag.selected {
+  background: var(--accent-warm);
+  color: var(--bg-primary);
+  border-color: var(--accent-warm);
+}
+
+/* ===== MODULE 3: GEO MONITOR ===== */
+.platform-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.platform-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.platform-card:hover {
+  border-color: var(--accent-warm);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+}
+
+.platform-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+}
+
+.platform-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.platform-url {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.geo-keywords {
+  margin-top: 20px;
+}
+
+.keyword-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.keyword-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.keyword-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--accent-warm-dim);
+  border: 1px solid var(--accent-warm);
+  color: var(--accent-warm);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.keyword-chip .remove {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.keyword-chip .remove:hover {
+  opacity: 1;
+}
+
+/* ===== MODULE 4: GEO WRITER ===== */
+.writer-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+}
+
+.writer-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.writer-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.writer-output {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 24px;
+  min-height: 400px;
+  max-height: 600px;
+  overflow-y: auto;
+  line-height: 2;
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+
+.writer-output.loading::after {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background: var(--accent-warm);
+  animation: blink 0.8s infinite;
+  margin-left: 2px;
+  vertical-align: middle;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.template-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template-item {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  cursor: pointer;
+  transition: all 0.25s;
+  font-size: 13px;
+}
+
+.template-item:hover, .template-item.active {
+  border-color: var(--accent-warm);
+  background: var(--accent-warm-dim);
+}
+
+/* ===== MODULE 5: XHS MONITOR ===== */
+.xhs-search-box {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.xhs-quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.xhs-link-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 0.25s;
+  cursor: pointer;
+}
+
+.xhs-link-card:hover {
+  border-color: #ff4757;
+  transform: translateY(-2px);
+}
+
+.xhs-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ff4757, #ff6b81);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.xhs-link-title {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.xhs-link-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Log Area */
+.log-area {
+  margin-top: 24px;
+}
+
+.log-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.log-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  font-size: 13px;
+}
+
+.log-entry .log-time {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.log-entry .log-text {
+  flex: 1;
+  margin: 0 12px;
+  line-height: 1.6;
+}
+
+.log-sentiment {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.log-sentiment.positive { background: #7ec97a22; color: var(--success); }
+.log-sentiment.negative { background: #c96b6b22; color: var(--danger); }
+.log-sentiment.neutral { background: #c9b46b22; color: var(--accent-gold); }
+
+/* ===== MODULE 6: TEAM CHECK-IN ===== */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.member-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: all 0.25s;
+}
+
+.member-card:hover {
+  border-color: var(--border-accent);
+}
+
+.member-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.member-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+}
+
+.member-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.member-role {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.checkin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.checkin-item {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.checkin-item .ci-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.checkin-item .ci-content {
+  flex: 1;
+  margin-left: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.checkin-input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Status Tags */
+.status-tag {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-tag.online { background: #7ec97a22; color: var(--success); }
+.status-tag.busy { background: #c9b46b22; color: var(--accent-gold); }
+.status-tag.offline { background: #c96b6b22; color: var(--danger); }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .header { padding: 20px 24px; }
+  .main { padding: 20px 24px; }
+  .copy-gen-area { grid-template-columns: 1fr; }
+  .writer-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .nav-tabs { flex-wrap: nowrap; overflow-x: auto; }
+  .nav-tab { font-size: 12px; padding: 10px 14px; }
+  .calendar-grid { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent-warm);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 14px 24px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-warm);
+  color: var(--bg-primary);
+  font-weight: 600;
+  font-size: 13px;
+  z-index: 1000;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.4s;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* Settings overlay */
+.settings-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 199;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ===== MODULE 7: EMOTION CARDS ===== */
+.emotion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.emotion-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 14px 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.emotion-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--emotion-color, var(--accent-warm));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.emotion-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--emotion-color, var(--accent-warm));
+}
+
+.emotion-card:hover::after { transform: scaleX(1); }
+
+.emotion-card.selected {
+  border-color: var(--emotion-color);
+  background: var(--emotion-bg);
+}
+
+.emotion-card.selected::after { transform: scaleX(1); }
+
+.emotion-emoji {
+  font-size: 38px;
+  margin-bottom: 10px;
+  display: block;
+  line-height: 1;
+}
+
+.emotion-name {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.emotion-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.emotion-detail-panel {
+  padding: 24px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--emotion-color, var(--accent-warm));
+  border-radius: var(--radius);
+  margin: 18px 0;
+  animation: fadeIn 0.3s ease;
+}
+
+.emotion-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.emotion-detail-header .ed-emoji {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.emotion-detail-header .ed-name {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+.emotion-detail-header .ed-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.emotion-detail-intro {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  font-style: italic;
+}
+
+.emotion-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.edg-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+
+.edg-label {
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.edg-text {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-primary);
+}
+
+.emotion-detail-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-accent);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .emotion-detail-grid { grid-template-columns: 1fr; }
+}
+
+.emotion-history {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.emotion-history-item {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+}
+
+.advice-output {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 22px;
+  min-height: 280px;
+  max-height: 600px;
+  overflow-y: auto;
+  line-height: 1.85;
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+
+.advice-output .placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ===== MODULE 8: ENNEAGRAM ===== */
+.enneagram-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.enneagram-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 12px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.enneagram-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--ennea-color, var(--accent-warm));
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s;
+}
+
+.enneagram-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--ennea-color, var(--accent-warm));
+}
+
+.enneagram-card:hover::after,
+.enneagram-card.selected::after { transform: scaleX(1); }
+
+.enneagram-card.selected {
+  border-color: var(--ennea-color);
+  background: var(--ennea-bg);
+}
+
+.ennea-number {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.ennea-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.ennea-subtitle {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.5px;
+}
+
+.ennea-detail {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--ennea-color, var(--accent-warm));
+  border-radius: var(--radius);
+  padding: 26px;
+  margin-bottom: 20px;
+}
+
+.ennea-detail-section {
+  margin-bottom: 18px;
+}
+
+.ennea-detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.ennea-detail-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.ennea-detail-content {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.ennea-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ennea-tag {
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.chat-analyzer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.analyzer-input-section, .analyzer-output-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.analyzer-output {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 22px;
+  min-height: 320px;
+  max-height: 600px;
+  overflow-y: auto;
+  line-height: 1.85;
+  font-size: 13.5px;
+  white-space: pre-wrap;
+}
+
+.analyzer-output .placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.empty-state .empty-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+@media (max-width: 1024px) {
+  .chat-analyzer { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .emotion-grid { grid-template-columns: repeat(2, 1fr); }
+  .enneagram-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ===== MODULE 9: MARKETING 8 MODULES ===== */
+.marketing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.marketing-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 20px 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.marketing-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; bottom: 0;
+  width: 4px;
+  background: var(--mkt-color, var(--accent-warm));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s;
+}
+
+.marketing-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--mkt-color, var(--accent-warm));
+}
+
+.marketing-card:hover::before,
+.marketing-card.selected::before { transform: scaleY(1); }
+
+.marketing-card.selected {
+  border-color: var(--mkt-color);
+  background: var(--mkt-bg);
+}
+
+.mkt-card-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.mkt-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+
+.mkt-emoji {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.mkt-name {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.mkt-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.mkt-question {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-top: 10px;
+}
+
+.mkt-detail {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--mkt-color, var(--accent-warm));
+  border-radius: var(--radius);
+  padding: 26px;
+  margin-bottom: 20px;
+}
+
+.mkt-detail-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 18px;
+}
+
+.mkt-detail-header .mdh-num {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.mkt-detail-header .mdh-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.mkt-detail-header .mdh-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  margin-top: 3px;
+}
+
+.mkt-detail-section {
+  margin-bottom: 18px;
+}
+
+.mkt-detail-section:last-child { margin-bottom: 0; }
+
+.mkt-detail-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.mkt-detail-content {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+/* ===== CHAT UI (Socratic Coach) ===== */
+.chat-container {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  height: 520px;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+}
+
+.chat-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.chat-header-title .avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-warm), var(--accent-coral));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--bg-primary);
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat-bubble {
+  max-width: 78%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  animation: fadeIn 0.3s ease;
+}
+
+.chat-bubble.user {
+  background: var(--accent-warm);
+  color: var(--bg-primary);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble.coach {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.chat-bubble.coach .coach-label {
+  font-size: 10px;
+  color: var(--accent-warm);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.chat-bubble.loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  align-self: flex-start;
+  padding: 14px 18px;
+}
+
+.typing-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.typing-dots span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent-warm);
+  animation: bounce 1.3s infinite;
+}
+
+.typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 10px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  align-items: flex-end;
+}
+
+.chat-input-row textarea {
+  flex: 1;
+  min-height: 44px;
+  max-height: 120px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  resize: none;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.chat-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.chat-suggestion {
+  padding: 7px 14px;
+  border-radius: 20px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chat-suggestion:hover {
+  border-color: var(--accent-warm);
+  color: var(--accent-warm);
+}
+
+.chat-coach-intro {
+  background: var(--accent-warm-dim);
+  border: 1px solid var(--accent-warm);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  font-size: 12.5px;
+  color: var(--accent-warm);
+  line-height: 1.65;
+}
+
+.chat-empty-hint {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 30px 20px;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .marketing-grid { grid-template-columns: 1fr; }
+  .chat-container { height: 480px; }
+}
+
+/* ============================================================
+   PROMPT LIBRARY MODULE
+   ============================================================ */
+.prompt-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.prompt-search-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.prompt-search-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  transition: border-color 0.25s;
+}
+
+.prompt-search-input:focus {
+  outline: none;
+  border-color: var(--accent-warm);
+}
+
+.prompt-search-input::placeholder { color: var(--text-muted); }
+
+.prompt-stats {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.prompt-categories {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.prompt-cat-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.prompt-cat-btn:hover {
+  border-color: var(--border-accent);
+  color: var(--text-primary);
+}
+
+.prompt-cat-btn.active {
+  background: var(--accent-warm);
+  color: var(--bg-primary);
+  border-color: var(--accent-warm);
+}
+
+.prompt-cat-btn .cat-count {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  opacity: 0.65;
+}
+
+.prompt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.prompt-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.prompt-card:hover {
+  border-color: var(--accent-warm-dim);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+.prompt-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.prompt-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--bg-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.prompt-card-cat {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+
+.cat-yuqing { color: var(--accent-coral); }
+.cat-content { color: var(--accent-warm); }
+.cat-research { color: var(--accent-sage); }
+.cat-report { color: var(--accent-blue); }
+.cat-strategy { color: var(--accent-purple); }
+
+.prompt-card-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.prompt-card-desc {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.prompt-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+
+.prompt-card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.prompt-card-tag {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-family: 'Space Mono', monospace;
+}
+
+.prompt-card-action {
+  font-size: 11px;
+  color: var(--accent-warm);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Modal for full prompt */
+.prompt-modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.prompt-modal-backdrop.show { display: flex; }
+
+.prompt-modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 760px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.prompt-modal-header {
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.prompt-modal-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--bg-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.prompt-modal-titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.prompt-modal-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.prompt-modal-desc {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.prompt-modal-close {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.prompt-modal-close:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.prompt-modal-body {
+  padding: 24px 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.prompt-modal-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prompt-modal-pre {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  font-family: 'Space Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.prompt-modal-pre .placeholder-var {
+  color: var(--accent-warm);
+  font-weight: 700;
+}
+
+.prompt-modal-tip {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--accent-warm-dim);
+  border-left: 3px solid var(--accent-warm);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.prompt-modal-tip strong { color: var(--accent-warm); }
+
+.prompt-modal-footer {
+  padding: 20px 28px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.prompt-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.prompt-empty-icon { font-size: 36px; margin-bottom: 12px; }
+
+@media (max-width: 768px) {
+  .prompt-grid { grid-template-columns: 1fr; }
+  .prompt-search-row { flex-direction: column; align-items: stretch; }
+  .prompt-modal-header { flex-direction: column; }
+}
+
+/* ============================================================
+   YUKI COPILOT AGENT
+   ============================================================ */
+.copilot-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-warm), var(--accent-coral));
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 0 var(--accent-warm-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  transition: all 0.3s ease;
+  animation: copilot-pulse 2.5s ease-in-out infinite;
+}
+.copilot-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5), 0 0 0 8px var(--accent-warm-dim);
+}
+.copilot-fab.has-alert::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-coral);
+  border: 2px solid var(--bg-primary);
+}
+@keyframes copilot-pulse {
+  0%, 100% { box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 0 var(--accent-warm-dim); }
+  50% { box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 0 12px transparent; }
+}
+
+.copilot-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 460px;
+  max-width: 100vw;
+  height: 100vh;
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -8px 0 32px rgba(0,0,0,0.5);
+}
+.copilot-drawer.open {
+  transform: translateX(0);
+}
+
+.copilot-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+}
+.copilot-title-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.copilot-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent-warm), var(--accent-coral));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.copilot-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+}
+.copilot-subtitle {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+.copilot-actions {
+  display: flex;
+  gap: 6px;
+}
+.copilot-icon-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.copilot-icon-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  border-color: var(--border-accent);
+}
+
+.copilot-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Morning brief card */
+.copilot-brief {
+  background: linear-gradient(135deg, rgba(212,165,116,0.08), rgba(201,123,107,0.05));
+  border: 1px solid var(--accent-warm-dim);
+  border-radius: 14px;
+  padding: 16px;
+}
+.copilot-brief-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.copilot-brief-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-warm);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.copilot-brief-refresh {
+  background: transparent;
+  border: 1px solid var(--accent-warm-dim);
+  color: var(--accent-warm);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copilot-brief-refresh:hover {
+  background: var(--accent-warm-dim);
+}
+.copilot-brief-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.copilot-brief-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copilot-brief-item:hover {
+  border-color: var(--accent-warm);
+  transform: translateX(2px);
+}
+.copilot-brief-priority {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.copilot-brief-priority.high { background: rgba(201,123,107,0.2); color: var(--accent-coral); }
+.copilot-brief-priority.med { background: rgba(212,165,116,0.2); color: var(--accent-warm); }
+.copilot-brief-priority.low { background: rgba(122,158,126,0.2); color: var(--accent-sage); }
+.copilot-brief-content {
+  flex: 1;
+  min-width: 0;
+}
+.copilot-brief-text {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.copilot-brief-meta {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+.copilot-brief-empty {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* Chat messages */
+.copilot-msg {
+  display: flex;
+  gap: 10px;
+  animation: copilot-msg-in 0.3s ease;
+}
+@keyframes copilot-msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.copilot-msg-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.copilot-msg.assistant .copilot-msg-avatar {
+  background: linear-gradient(135deg, var(--accent-warm), var(--accent-coral));
+}
+.copilot-msg.user .copilot-msg-avatar {
+  background: var(--bg-card);
+  border: 1px solid var(--border-accent);
+  color: var(--text-secondary);
+}
+.copilot-msg-bubble {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.copilot-msg.user .copilot-msg-bubble {
+  background: rgba(212,165,116,0.08);
+  border-color: var(--accent-warm-dim);
+}
+
+/* Thinking trace - 思考过程可见 */
+.copilot-thinking {
+  background: rgba(107,143,201,0.06);
+  border: 1px dashed rgba(107,143,201,0.3);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--accent-blue);
+  line-height: 1.5;
+  font-family: 'Space Mono', 'SF Mono', monospace;
+}
+.copilot-thinking-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent-blue);
+  opacity: 0.7;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+.copilot-thinking-step {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 4px;
+}
+.copilot-thinking-step::before {
+  content: '▸';
+  color: var(--accent-blue);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Action buttons in chat */
+.copilot-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.copilot-action-btn {
+  background: var(--bg-input);
+  border: 1px solid var(--border-accent);
+  color: var(--text-primary);
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copilot-action-btn:hover {
+  background: var(--accent-warm);
+  color: #000;
+  border-color: var(--accent-warm);
+}
+
+/* Suggested questions */
+.copilot-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+.copilot-suggestion {
+  text-align: left;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.copilot-suggestion:hover {
+  border-color: var(--accent-warm);
+  color: var(--text-primary);
+  background: var(--bg-card-hover);
+}
+
+/* Input area */
+.copilot-input-area {
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+}
+.copilot-input-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.copilot-input {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--border-accent);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: inherit;
+  resize: none;
+  min-height: 40px;
+  max-height: 120px;
+  line-height: 1.5;
+}
+.copilot-input:focus {
+  outline: none;
+  border-color: var(--accent-warm);
+}
+.copilot-send {
+  background: linear-gradient(135deg, var(--accent-warm), var(--accent-coral));
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.copilot-send:hover {
+  transform: scale(1.05);
+}
+.copilot-send:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.copilot-input-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  text-align: center;
+}
+
+/* Backdrop */
+.copilot-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+.copilot-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Loading dots */
+.copilot-loading-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+.copilot-loading-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-warm);
+  animation: copilot-bounce 1.4s ease-in-out infinite both;
+}
+.copilot-loading-dots span:nth-child(2) { animation-delay: 0.16s; }
+.copilot-loading-dots span:nth-child(3) { animation-delay: 0.32s; }
+@keyframes copilot-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .copilot-drawer { width: 100vw; }
+  .copilot-fab { bottom: 16px; right: 16px; width: 54px; height: 54px; font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">Yuki's Workshop</div>
+    <div class="logo-sub">Daily Operations Hub</div>
+  </div>
+  <div class="header-date">
+    <span class="dot"></span>
+    <span id="currentDate"></span>
+    <button class="btn btn-sm" onclick="toggleSettings()" style="margin-left:12px;" id="settingsBtn">⚙️ 设置</button>
+  </div>
+</div>
+
+<!-- Settings Panel -->
+<div id="settingsPanel" style="display:none;position:fixed;top:0;right:0;width:420px;height:100vh;background:var(--bg-card);border-left:1px solid var(--border);z-index:200;overflow-y:auto;box-shadow:-8px 0 40px rgba(0,0,0,0.4);animation:slideIn 0.3s ease;">
+  <div style="padding:28px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <div style="font-family:'Noto Serif SC',serif;font-size:20px;font-weight:700;">⚙️ Workshop 设置</div>
+      <button class="btn btn-sm" onclick="toggleSettings()">✕ 关闭</button>
+    </div>
+
+    <!-- API Key Config -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🔑 DeepSeek API Key</div>
+        <div class="card-subtitle" id="apiKeyStatus">未配置</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;line-height:1.6;">
+        AI 文案生成和 GEO 写作需要 API Key 才能工作。<br>
+        前往 <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:var(--accent-warm);">platform.deepseek.com</a> 获取。<br>
+        新用户注册即送 500 万 tokens，无需信用卡。<br>
+        密钥仅保存在你的浏览器本地，不会上传到任何服务器。
+      </div>
+      <div style="position:relative;">
+        <label>API Key</label>
+        <div style="display:flex;gap:8px;">
+          <input type="password" id="deepseekApiKey" placeholder="sk-xxxx..." style="flex:1;font-family:'Space Mono',monospace;font-size:12px;">
+          <button class="btn btn-sm" onclick="toggleKeyVisibility()" title="显示/隐藏">👁</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn btn-primary btn-sm" onclick="saveApiKey()">💾 保存密钥</button>
+        <button class="btn btn-sm btn-danger" onclick="clearApiKey()">🗑 清除</button>
+        <button class="btn btn-sm" onclick="testApiKey()">🧪 测试连接</button>
+      </div>
+      <div id="apiTestResult" style="margin-top:12px;font-size:12px;display:none;padding:10px;border-radius:var(--radius-sm);"></div>
+    </div>
+
+    <!-- Feishu Config -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📊 飞书 API 配置</div>
+        <div class="card-subtitle" id="feishuConfigStatus">未配置</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;line-height:1.6;">
+        配置后可自动拉取飞书表格中的内容规划。<br>
+        前往 <a href="https://open.feishu.cn" target="_blank" style="color:var(--accent-warm);">飞书开放平台</a> 创建应用。
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div>
+          <label>App ID</label>
+          <input type="text" id="settingsFeishuAppId" placeholder="cli_a5xxxxxx" style="font-size:12px;">
+        </div>
+        <div>
+          <label>App Secret</label>
+          <input type="password" id="settingsFeishuAppSecret" placeholder="App Secret" style="font-size:12px;">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="saveFeishuSettingsConfig()" style="margin-top:12px;">💾 保存飞书配置</button>
+    </div>
+
+    <!-- Data Management -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">🗄 数据管理</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;line-height:1.6;">
+        所有数据保存在浏览器 localStorage 中。清除浏览器数据会丢失所有记录。
+      </div>
+      <button class="btn btn-sm btn-danger" onclick="if(confirm('确定要清除所有本地数据吗？此操作不可撤销。')){localStorage.clear();location.reload();}">⚠️ 清除所有数据</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- Navigation -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('calendar')">
+      <span class="tab-icon">📅</span> 每日日程
+    </button>
+    <button class="nav-tab" onclick="switchTab('poster')">
+      <span class="tab-icon">🎨</span> 海报文案
+    </button>
+    <button class="nav-tab" onclick="switchTab('geo')">
+      <span class="tab-icon">📡</span> GEO 监测
+    </button>
+    <button class="nav-tab" onclick="switchTab('writer')">
+      <span class="tab-icon">✍️</span> GEO 写作
+    </button>
+    <button class="nav-tab" onclick="switchTab('xhs')">
+      <span class="tab-icon">📱</span> 小红书舆情
+    </button>
+    <button class="nav-tab" onclick="switchTab('team')">
+      <span class="tab-icon">👥</span> 员工管理
+    </button>
+    <button class="nav-tab" onclick="switchTab('emotion')">
+      <span class="tab-icon">💭</span> 情绪卡牌
+    </button>
+    <button class="nav-tab" onclick="switchTab('enneagram')">
+      <span class="tab-icon">🧭</span> 九型人格
+    </button>
+    <button class="nav-tab" onclick="switchTab('marketing')">
+      <span class="tab-icon">📊</span> 营销八大
+    </button>
+    <button class="nav-tab" onclick="switchTab('prompts')">
+      <span class="tab-icon">🪄</span> Prompt 库
+    </button>
+  </div>
+
+  <!-- ==================== MODULE 1: CALENDAR ==================== -->
+  <div class="module-panel active" id="panel-calendar">
+    <div class="section-title">📅 每日工作日程</div>
+    <div class="section-desc">石墨文档《【Yuki】2026工作Calendar》已嵌入，可直接在下方查看和编辑。</div>
+
+    <!-- Shimo Embed -->
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="card-header" style="padding:16px 24px;margin-bottom:0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#36d1c4,#5b86e5);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;">石</div>
+          <div>
+            <div class="card-title">【Yuki】2026工作Calendar</div>
+            <div class="card-subtitle" style="margin-top:2px;">SHIMO · 实时同步</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-sm" onclick="document.getElementById('shimoFrame').src=document.getElementById('shimoFrame').src" title="刷新">🔄 刷新</button>
+          <a class="btn btn-sm" href="https://shimo.im/file-invite/gFCPabdhZfUybns96ehEsCgayeV26/" target="_blank" style="text-decoration:none;">↗ 新窗口打开</a>
+        </div>
+      </div>
+      <div style="position:relative;width:100%;height:600px;background:var(--bg-input);">
+        <iframe
+          id="shimoFrame"
+          src="https://shimo.im/file-invite/gFCPabdhZfUybns96ehEsCgayeV26/"
+          style="width:100%;height:100%;border:none;"
+          allow="clipboard-read; clipboard-write"
+          loading="lazy"
+        ></iframe>
+        <div id="shimoOverlay" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:var(--bg-input);pointer-events:none;transition:opacity 0.5s;z-index:1;">
+          <div style="text-align:center;">
+            <div class="spinner" style="margin-bottom:12px;"></div>
+            <div style="font-size:13px;color:var(--text-muted);">正在加载石墨文档...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Local Tasks -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">⚡ 今日快捷备忘</div>
+        <button class="btn btn-sm btn-primary" onclick="toggleCalForm()">+ 添加</button>
+      </div>
+
+      <div class="cal-add-form" id="calAddForm" style="display:none;">
+        <div>
+          <label>开始时间</label>
+          <input type="time" id="calStartTime" value="09:00">
+        </div>
+        <div>
+          <label>结束时间</label>
+          <input type="time" id="calEndTime" value="10:00">
+        </div>
+        <div class="full-width">
+          <label>事项名称</label>
+          <input type="text" id="calTitle" placeholder="例如：部门周会">
+        </div>
+        <div class="full-width">
+          <label>备注</label>
+          <input type="text" id="calDesc" placeholder="可选备注信息">
+        </div>
+        <div class="full-width" style="display:flex;gap:8px;">
+          <button class="btn btn-primary" onclick="addCalEvent()">确认添加</button>
+          <button class="btn" onclick="toggleCalForm()">取消</button>
+        </div>
+      </div>
+
+      <div class="calendar-grid" id="calendarGrid">
+        <!-- Events rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODULE 2: POSTER & COPY ==================== -->
+  <div class="module-panel" id="panel-poster">
+    <div class="section-title">🎨 海报与文案生成</div>
+    <div class="section-desc">查看飞书内容规划日历，确认今日主题后使用 AI 生成文案。</div>
+
+    <!-- Feishu Sheet Embed -->
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="card-header" style="padding:16px 24px;margin-bottom:0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#3370ff,#2b5fd9);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;">飞</div>
+          <div>
+            <div class="card-title">月度内容规划日历</div>
+            <div class="card-subtitle" style="margin-top:2px;">FEISHU · 查看今日发布计划</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-sm" onclick="document.getElementById('feishuFrame').src=document.getElementById('feishuFrame').src">🔄 刷新</button>
+          <a class="btn btn-sm" href="https://my.feishu.cn/sheets/XOMlskL1fhvvRgt2YRucs39jnAf?sheet=gCYBnd" target="_blank" style="text-decoration:none;">↗ 新窗口打开</a>
+        </div>
+      </div>
+      <div style="position:relative;width:100%;height:420px;background:var(--bg-input);">
+        <iframe
+          id="feishuFrame"
+          src="https://my.feishu.cn/sheets/XOMlskL1fhvvRgt2YRucs39jnAf?sheet=gCYBnd"
+          style="width:100%;height:100%;border:none;"
+          allow="clipboard-read; clipboard-write"
+          loading="lazy"
+        ></iframe>
+        <div id="feishuOverlay" style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:var(--bg-input);pointer-events:none;transition:opacity 0.5s;z-index:1;">
+          <div style="text-align:center;">
+            <div class="spinner" style="margin-bottom:12px;"></div>
+            <div style="font-size:13px;color:var(--text-muted);">正在加载飞书表格...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Status Card (will be activated after config) -->
+    <div class="card" id="feishuApiCard" style="display:none;">
+      <div class="card-header">
+        <div class="card-title">📡 飞书 API 自动拉取</div>
+        <div class="card-subtitle" id="feishuApiStatus">未配置</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <label>App ID</label>
+          <input type="text" id="feishuAppId" placeholder="cli_a5xxxxxx">
+        </div>
+        <div>
+          <label>App Secret</label>
+          <input type="text" id="feishuAppSecret" placeholder="你的 App Secret">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-primary btn-sm" onclick="fetchFeishuData()">🔄 拉取今日规划</button>
+        <button class="btn btn-sm" onclick="saveFeishuConfig()">💾 保存配置</button>
+      </div>
+      <div id="feishuDataPreview" style="margin-top:16px;display:none;">
+        <label>今日内容计划</label>
+        <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;max-height:200px;overflow-y:auto;" id="feishuDataContent"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">AI 文案生成器</div>
+        <div class="card-subtitle">POWERED BY DEEPSEEK</div>
+      </div>
+
+      <div class="copy-gen-area">
+        <div class="copy-input-section">
+          <div>
+            <label>今日发布主题</label>
+            <input type="text" id="copyTopic" placeholder="例如：英国G5院校申请攻略">
+          </div>
+          <div>
+            <label>发布平台</label>
+            <select id="copyPlatform">
+              <option value="小红书">小红书</option>
+              <option value="微信公众号">微信公众号</option>
+              <option value="抖音">抖音</option>
+              <option value="微博">微博</option>
+              <option value="Instagram">Instagram</option>
+            </select>
+          </div>
+          <div>
+            <label>文案风格</label>
+            <select id="copyStyle">
+              <option value="专业权威">专业权威</option>
+              <option value="轻松活泼">轻松活泼</option>
+              <option value="学生视角">学生视角（种草风）</option>
+              <option value="干货分享">干货分享</option>
+              <option value="情感共鸣">情感共鸣</option>
+            </select>
+          </div>
+          <div>
+            <label>补充要求（可选）</label>
+            <textarea id="copyExtra" rows="3" placeholder="例如：需要包含具体申请截止日期，目标受众是大三学生"></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="generateCopy()" id="genCopyBtn">
+            ✨ 生成文案
+          </button>
+        </div>
+
+        <div class="copy-output-section">
+          <label>生成结果</label>
+          <div class="copy-output" id="copyOutput">
+            <span class="placeholder">点击「生成文案」后，AI 将在此处输出文案内容...</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-sm" onclick="copyCopyText()">📋 复制文案</button>
+            <button class="btn btn-sm" onclick="regenerateCopy()">🔄 重新生成</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODULE 3: GEO MONITOR ==================== -->
+  <div class="module-panel" id="panel-geo">
+    <div class="section-title">📡 GEO 效果监测</div>
+    <div class="section-desc">一键打开各 AI 平台，检查 UKEC 相关内容的 GEO（Generative Engine Optimization）效果。</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">AI 平台快速入口</div>
+        <div class="card-subtitle">点击卡片直接跳转</div>
+      </div>
+
+      <div class="platform-grid">
+        <a class="platform-card" href="https://chat.deepseek.com/" target="_blank">
+          <div class="platform-icon" style="background:linear-gradient(135deg,#4a6cf7,#6366f1)">DS</div>
+          <div class="platform-name">DeepSeek</div>
+          <div class="platform-url">chat.deepseek.com</div>
+        </a>
+        <a class="platform-card" href="https://www.doubao.com/" target="_blank">
+          <div class="platform-icon" style="background:linear-gradient(135deg,#00c6fb,#005bea)">豆</div>
+          <div class="platform-name">豆包</div>
+          <div class="platform-url">doubao.com</div>
+        </a>
+        <a class="platform-card" href="https://tongyi.aliyun.com/" target="_blank">
+          <div class="platform-icon" style="background:linear-gradient(135deg,#f093fb,#f5576c)">通</div>
+          <div class="platform-name">通义千问</div>
+          <div class="platform-url">tongyi.aliyun.com</div>
+        </a>
+        <a class="platform-card" href="https://yuanbao.tencent.com/" target="_blank">
+          <div class="platform-icon" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">元</div>
+          <div class="platform-name">腾讯元宝</div>
+          <div class="platform-url">yuanbao.tencent.com</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">监测关键词管理</div>
+        <div class="card-subtitle">记录你常用的GEO测试关键词</div>
+      </div>
+
+      <div class="geo-keywords">
+        <div class="keyword-input-row">
+          <input type="text" id="geoKeywordInput" placeholder="输入关键词，例如：英国留学中介推荐" style="flex:1;">
+          <button class="btn btn-primary btn-sm" onclick="addGeoKeyword()">添加</button>
+        </div>
+        <div class="keyword-chips" id="geoKeywordChips">
+          <!-- Chips rendered here -->
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">GEO 监测记录</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+        <select id="geoRecordPlatform">
+          <option value="DeepSeek">DeepSeek</option>
+          <option value="豆包">豆包</option>
+          <option value="通义千问">通义千问</option>
+          <option value="腾讯元宝">腾讯元宝</option>
+        </select>
+        <input type="text" id="geoRecordKeyword" placeholder="测试的关键词">
+        <select id="geoRecordResult">
+          <option value="被推荐">✅ 被推荐</option>
+          <option value="未出现">❌ 未出现</option>
+          <option value="部分出现">⚠️ 部分提及</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="geoRecordNote" placeholder="补充说明（可选）" style="flex:1;">
+        <button class="btn btn-primary btn-sm" onclick="addGeoRecord()">记录</button>
+      </div>
+      <div class="log-entries" id="geoRecordList" style="margin-top:16px;">
+        <!-- Records rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODULE 4: GEO WRITER ==================== -->
+  <div class="module-panel" id="panel-writer">
+    <div class="section-title">✍️ GEO 文章写作助手</div>
+    <div class="section-desc">AI 助手帮你撰写关于 UKEC 英国留学、香港留学的 GEO 优化文章。</div>
+
+    <div class="card">
+      <div class="writer-layout">
+        <div class="writer-sidebar">
+          <label>文章模板</label>
+          <div class="template-list">
+            <div class="template-item active" onclick="selectTemplate(this, 'uk-guide')">
+              🇬🇧 英国留学攻略
+            </div>
+            <div class="template-item" onclick="selectTemplate(this, 'hk-guide')">
+              🇭🇰 香港留学攻略
+            </div>
+            <div class="template-item" onclick="selectTemplate(this, 'compare')">
+              ⚖️ 英港对比分析
+            </div>
+            <div class="template-item" onclick="selectTemplate(this, 'agency')">
+              🏢 留学中介推荐
+            </div>
+            <div class="template-item" onclick="selectTemplate(this, 'timeline')">
+              📋 申请时间线
+            </div>
+            <div class="template-item" onclick="selectTemplate(this, 'cost')">
+              💰 费用详解
+            </div>
+            <div class="template-item" onclick="selectTemplate(this, 'custom')">
+              ✏️ 自定义主题
+            </div>
+          </div>
+
+          <label style="margin-top:16px;">目标关键词</label>
+          <input type="text" id="writerKeyword" placeholder="例如：UKEC 英国留学">
+
+          <label>目标平台</label>
+          <select id="writerPlatform">
+            <option value="通用SEO">通用 SEO 文章</option>
+            <option value="知乎">知乎回答</option>
+            <option value="百度经验">百度经验</option>
+            <option value="搜狐号">搜狐号</option>
+          </select>
+
+          <label>文章长度</label>
+          <select id="writerLength">
+            <option value="800字左右">短文（~800字）</option>
+            <option value="1500字左右">中文（~1500字）</option>
+            <option value="2500字左右">长文（~2500字）</option>
+          </select>
+
+          <label>自定义要求</label>
+          <textarea id="writerCustom" rows="3" placeholder="例如：重点突出UKEC的服务优势、成功案例"></textarea>
+
+          <button class="btn btn-primary" onclick="generateArticle()" id="genArticleBtn">
+            ✨ 生成文章
+          </button>
+        </div>
+
+        <div class="writer-main">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <label>生成结果</label>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-sm" onclick="copyArticle()">📋 复制</button>
+              <button class="btn btn-sm" onclick="downloadArticle()">💾 下载</button>
+            </div>
+          </div>
+          <div class="writer-output" id="writerOutput">
+            <span class="placeholder">选择模板和参数后点击「生成文章」，AI 将在此处输出 GEO 优化文章...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODULE 5: XHS MONITOR ==================== -->
+  <div class="module-panel" id="panel-xhs">
+    <div class="section-title">📱 小红书舆情监测</div>
+    <div class="section-desc">快速搜索小红书上关于 UKEC 的相关内容，监控品牌舆情。</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">快捷搜索</div>
+      </div>
+      <div class="xhs-search-box">
+        <input type="text" id="xhsSearchInput" placeholder="输入搜索关键词..." value="UKEC" style="flex:1;">
+        <button class="btn btn-primary" onclick="searchXHS()">🔍 搜索小红书</button>
+      </div>
+
+      <div class="xhs-quick-links">
+        <div class="xhs-link-card" onclick="openXHS('UKEC')">
+          <div class="xhs-icon">📍</div>
+          <div>
+            <div class="xhs-link-title">搜索 "UKEC"</div>
+            <div class="xhs-link-desc">品牌名称直搜</div>
+          </div>
+        </div>
+        <div class="xhs-link-card" onclick="openXHS('UKEC 留学')">
+          <div class="xhs-icon">🎓</div>
+          <div>
+            <div class="xhs-link-title">搜索 "UKEC 留学"</div>
+            <div class="xhs-link-desc">留学相关内容</div>
+          </div>
+        </div>
+        <div class="xhs-link-card" onclick="openXHS('英国留学中介')">
+          <div class="xhs-icon">🇬🇧</div>
+          <div>
+            <div class="xhs-link-title">搜索 "英国留学中介"</div>
+            <div class="xhs-link-desc">行业竞品对比</div>
+          </div>
+        </div>
+        <div class="xhs-link-card" onclick="openXHS('香港留学中介')">
+          <div class="xhs-icon">🇭🇰</div>
+          <div>
+            <div class="xhs-link-title">搜索 "香港留学中介"</div>
+            <div class="xhs-link-desc">香港方向监测</div>
+          </div>
+        </div>
+        <div class="xhs-link-card" onclick="openXHS('UKEC 怎么样')">
+          <div class="xhs-icon">💬</div>
+          <div>
+            <div class="xhs-link-title">搜索 "UKEC 怎么样"</div>
+            <div class="xhs-link-desc">口碑评价</div>
+          </div>
+        </div>
+        <div class="xhs-link-card" onclick="openXHS('UKEC 避雷')">
+          <div class="xhs-icon">⚡</div>
+          <div>
+            <div class="xhs-link-title">搜索 "UKEC 避雷"</div>
+            <div class="xhs-link-desc">负面舆情监控</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">舆情记录</div>
+        <button class="btn btn-sm btn-primary" onclick="toggleXHSLogForm()">+ 记录舆情</button>
+      </div>
+
+      <div id="xhsLogForm" style="display:none;margin-bottom:16px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <input type="text" id="xhsLogKeyword" placeholder="搜索关键词">
+          <select id="xhsLogSentiment">
+            <option value="positive">😊 正面</option>
+            <option value="negative">😠 负面</option>
+            <option value="neutral">😐 中性</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="xhsLogContent" placeholder="简要描述发现的内容..." style="flex:1;">
+          <button class="btn btn-primary btn-sm" onclick="addXHSLog()">保存</button>
+        </div>
+      </div>
+
+      <div class="log-entries" id="xhsLogList">
+        <!-- Logs rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODULE 6: TEAM ==================== -->
+  <div class="module-panel" id="panel-team">
+    <div class="section-title">👥 员工每日 Check-in</div>
+    <div class="section-desc">记录每位团队成员的每日工作进展和待办事项。</div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header">
+        <div class="card-title">团队成员设置</div>
+        <button class="btn btn-sm" onclick="toggleMemberSetup()">⚙️ 编辑成员</button>
+      </div>
+      <div id="memberSetup" style="display:none;">
+        <div id="memberSetupList"></div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <input type="text" id="newMemberName" placeholder="成员名称" style="flex:1;">
+          <input type="text" id="newMemberRole" placeholder="职位" style="flex:1;">
+          <button class="btn btn-primary btn-sm" onclick="addMember()">添加</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="team-grid" id="teamGrid">
+      <!-- Member cards rendered here -->
+    </div>
+  </div>
+
+  <!-- ==================== MODULE 7: EMOTION CARDS ==================== -->
+  <div class="module-panel" id="panel-emotion">
+    <div class="section-title">💭 情绪卡牌 · 谈话前的自我觉察</div>
+    <div class="section-desc">在与员工进行一对一谈话前，先选择一张代表你当下情绪的卡牌。AI 将根据你的情绪状态，给出本次谈话的沟通策略和具体建议。</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">选择此刻的情绪</div>
+        <div class="card-subtitle">CHOOSE YOUR CURRENT MOOD</div>
+      </div>
+
+      <div class="emotion-grid" id="emotionGrid">
+        <!-- Emotion cards rendered here -->
+      </div>
+
+      <div id="emotionSelectedBar" style="display:none;" class="emotion-detail-panel">
+        <!-- Rich detail rendered by JS -->
+      </div>
+
+      <div style="margin-top:16px;">
+        <label>本次谈话背景（可选，越具体建议越精准）</label>
+        <textarea id="emotionContext" rows="3" placeholder="例如：要和小A聊她最近KPI下滑的事，担心她有情绪。/ 给团队反馈季度复盘，需要指出几个改进点。"></textarea>
+      </div>
+
+      <button class="btn btn-primary" onclick="getConversationAdvice()" id="emotionAdviceBtn" style="margin-top:12px;">
+        ✨ 生成谈话建议
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">谈话指导</div>
+        <div class="card-subtitle">AI · 基于当前情绪的沟通策略</div>
+      </div>
+      <div class="advice-output" id="emotionAdvice">
+        <span class="placeholder">选择情绪卡牌并点击「生成谈话建议」后，AI 将在此处输出本次谈话的策略指导...</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn btn-sm" onclick="copyEmotionAdvice()">📋 复制建议</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">最近情绪记录</div>
+        <div class="card-subtitle">最多保留最近 30 条</div>
+      </div>
+      <div class="emotion-history" id="emotionHistory">
+        <div style="color:var(--text-muted);font-size:12px;padding:8px;">暂无情绪记录</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODULE 8: ENNEAGRAM ==================== -->
+  <div class="module-panel" id="panel-enneagram">
+    <div class="section-title">🧭 九型人格 · 因人沟通指南</div>
+    <div class="section-desc">选择对方的人格类型，了解 ta 的核心动机与沟通偏好。也可以粘贴 ta 的聊天内容，让 AI 帮你解读潜台词、给出最适合的回复策略。</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">选择对方的人格类型</div>
+        <div class="card-subtitle">SELECT THEIR ENNEAGRAM TYPE</div>
+      </div>
+
+      <div class="enneagram-grid" id="enneagramGrid">
+        <!-- Enneagram cards rendered here -->
+      </div>
+
+      <div id="enneaDetail" class="ennea-detail" style="display:none;">
+        <!-- Detail rendered here -->
+      </div>
+    </div>
+
+    <div class="card" id="chatAnalyzerSection" style="display:none;">
+      <div class="card-header">
+        <div class="card-title">💬 聊天意图解读 · AI 分析</div>
+        <div class="card-subtitle">POWERED BY DEEPSEEK</div>
+      </div>
+
+      <div class="chat-analyzer">
+        <div class="analyzer-input-section">
+          <div>
+            <label>对方的聊天内容</label>
+            <textarea id="chatContent" rows="8" placeholder="粘贴对方说的话，或描述聊天截图的内容。例如：&#10;&#10;A：「这个方案我看了，可以」&#10;A：「但是上次那个我也说过类似的话来着」&#10;&#10;支持多轮对话，越完整分析越准。"></textarea>
+          </div>
+          <div>
+            <label>我的背景 / 想达成的目的（可选）</label>
+            <textarea id="chatMyContext" rows="3" placeholder="例如：我想确认 ta 是不是真的认可这个方案，还是只是不想再争论。/ 我希望 ta 能主动承担这个项目。"></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="analyzeChatMessage()" id="analyzeBtn">
+            🔍 解读 & 给出回复建议
+          </button>
+        </div>
+
+        <div class="analyzer-output-section">
+          <label>AI 分析结果</label>
+          <div class="analyzer-output" id="analyzerOutput">
+            <span class="placeholder">先选择对方的人格类型，粘贴对方的聊天内容，AI 将基于九型人格视角分析 ta 的真实意图，并给出具体的回复建议...</span>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-sm" onclick="copyAnalysis()">📋 复制分析</button>
+            <button class="btn btn-sm" onclick="reanalyze()">🔄 重新分析</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="enneagramEmptyTip">
+      <div class="empty-state">
+        <div class="empty-icon">🎯</div>
+        <div>选择上方任意一个号码卡片，查看 ta 的人格画像和沟通指南</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODULE 9: MARKETING 8 MODULES ==================== -->
+  <div class="module-panel" id="panel-marketing">
+    <div class="section-title">📊 市场营销八大模块 · 教练式启发</div>
+    <div class="section-desc">可视化市场营销思考框架。下方 AI 教练会用苏格拉底式提问启发你思考，<strong style="color:var(--accent-warm);">只提问，不直接给答案</strong>——因为好的答案永远从你自己的情境里长出来。</div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">八大模块 · 点击查看详情</div>
+        <div class="card-subtitle">THE 8 MARKETING MODULES</div>
+      </div>
+
+      <div class="marketing-grid" id="marketingGrid">
+        <!-- Cards rendered by JS -->
+      </div>
+
+      <div id="marketingDetail" class="mkt-detail" style="display:none;">
+        <!-- Detail rendered by JS -->
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">💬 AI 教练 · 问题启发</div>
+        <div class="card-subtitle">SOCRATIC MARKETING COACH</div>
+      </div>
+
+      <div class="chat-coach-intro">
+        👋 我是你的营销教练。遇到品牌或市场类问题时，把它抛给我——我不会直接给你答案，但会帮你识别问题属于八大模块的哪一块，然后问出几个关键问题，帮你自己找到最适合你业务的答案。
+      </div>
+
+      <label style="display:block;margin-bottom:10px;">你可以这样开始提问：</label>
+      <div class="chat-suggestions">
+        <div class="chat-suggestion" onclick="useChatSuggestion(this)">我们的品牌定位好像不够清晰，该怎么梳理？</div>
+        <div class="chat-suggestion" onclick="useChatSuggestion(this)">社媒投放 ROI 一直上不来，问题出在哪？</div>
+        <div class="chat-suggestion" onclick="useChatSuggestion(this)">竞品在打价格战，我们要跟进吗？</div>
+        <div class="chat-suggestion" onclick="useChatSuggestion(this)">我们的目标用户到底是谁，我有点模糊了</div>
+        <div class="chat-suggestion" onclick="useChatSuggestion(this)">新推一个产品系列，应该从哪个维度思考？</div>
+      </div>
+
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-header-title">
+            <div class="avatar">🎓</div>
+            <div>
+              <div>营销教练</div>
+              <div style="font-size:10px;color:var(--text-muted);font-weight:400;letter-spacing:1px;font-family:'Space Mono',monospace;">MARKETING COACH · SOCRATIC MODE</div>
+            </div>
+          </div>
+          <button class="btn btn-sm" onclick="resetMarketingChat()">🔄 重新开始</button>
+        </div>
+
+        <div class="chat-messages" id="marketingChatMessages">
+          <!-- Messages rendered by JS -->
+        </div>
+
+        <div class="chat-input-row">
+          <textarea id="marketingChatInput" placeholder="把你的营销/品牌困惑发过来，按 Enter 发送、Shift+Enter 换行..."></textarea>
+          <button class="btn btn-primary" onclick="sendMarketingChat()" id="marketingSendBtn">发送 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODULE 10: PROMPT LIBRARY ==================== -->
+  <div class="module-panel" id="panel-prompts">
+    <div class="section-title">🪄 Prompt 库 · 品牌公关常用模板</div>
+    <div class="section-desc">六大类共 16 个 Prompt，覆盖 AI 协作设定、舆情分析、内容撰写、用户调研、向上沟通、品牌策略。点击任意卡片查看完整 Prompt，支持一键复制 → 粘贴到 Claude/DeepSeek 等任意 AI 对话框使用。</div>
+
+    <div class="prompt-toolbar">
+      <div class="prompt-search-row">
+        <input type="text" id="promptSearch" class="prompt-search-input" placeholder="🔍 搜索关键词，比如「小红书」「调研」「复盘」..." oninput="filterPrompts()">
+        <span class="prompt-stats" id="promptStats"></span>
+      </div>
+      <div class="prompt-categories" id="promptCategories">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <div class="prompt-grid" id="promptGrid">
+      <!-- Cards rendered by JS -->
+    </div>
+  </div>
+
+  <!-- Prompt Detail Modal -->
+  <div class="prompt-modal-backdrop" id="promptModal" onclick="if(event.target===this)closePromptModal()">
+    <div class="prompt-modal">
+      <div class="prompt-modal-header">
+        <div class="prompt-modal-icon" id="promptModalIcon">🪄</div>
+        <div class="prompt-modal-titles">
+          <div class="prompt-modal-title" id="promptModalTitle">Prompt 标题</div>
+          <div class="prompt-modal-desc" id="promptModalDesc">使用场景说明</div>
+        </div>
+        <button class="prompt-modal-close" onclick="closePromptModal()">✕</button>
+      </div>
+      <div class="prompt-modal-body">
+        <div class="prompt-modal-label">📋 完整 Prompt（复制后将【】替换为实际信息）</div>
+        <pre class="prompt-modal-pre" id="promptModalPre"></pre>
+        <div class="prompt-modal-tip" id="promptModalTip" style="display:none;">
+          <strong>💡 使用提示：</strong><span id="promptModalTipText"></span>
+        </div>
+      </div>
+      <div class="prompt-modal-footer">
+        <button class="btn" onclick="closePromptModal()">关闭</button>
+        <button class="btn btn-primary" onclick="copyPromptText()" id="promptCopyBtn">📋 复制 Prompt</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ==================== YUKI COPILOT AGENT ==================== -->
+<button class="copilot-fab" id="copilotFab" onclick="copilotToggle()" title="Yuki 副驾 · 按 Ctrl+J 唤起">
+  🤖
+</button>
+
+<div class="copilot-backdrop" id="copilotBackdrop" onclick="copilotClose()"></div>
+
+<div class="copilot-drawer" id="copilotDrawer">
+  <div class="copilot-header">
+    <div class="copilot-title-block">
+      <div class="copilot-avatar">🤖</div>
+      <div>
+        <div class="copilot-title">Yuki 副驾</div>
+        <div class="copilot-subtitle">YOUR PRIVATE AGENT · 思考可见</div>
+      </div>
+    </div>
+    <div class="copilot-actions">
+      <button class="copilot-icon-btn" onclick="copilotClearChat()" title="清空对话">🗑</button>
+      <button class="copilot-icon-btn" onclick="copilotClose()" title="关闭">✕</button>
+    </div>
+  </div>
+
+  <div class="copilot-body" id="copilotBody">
+    <!-- Morning brief card + chat messages 动态渲染 -->
+  </div>
+
+  <div class="copilot-input-area">
+    <div class="copilot-input-wrap">
+      <textarea
+        class="copilot-input"
+        id="copilotInput"
+        placeholder="问我任何事——巡检、舆情、写文案、做判断..."
+        rows="1"
+        onkeydown="copilotInputKey(event)"
+        oninput="copilotInputAutoResize(this)"
+      ></textarea>
+      <button class="copilot-send" id="copilotSend" onclick="copilotSend()">→</button>
+    </div>
+    <div class="copilot-input-hint">Enter 发送 · Shift+Enter 换行 · 我会把每一步思考过程展示给你</div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DATA PERSISTENCE (LocalStorage)
+// ============================================================
+const STORAGE_KEYS = {
+  calendar: 'yuki_calendar',
+  geoKeywords: 'yuki_geo_keywords',
+  geoRecords: 'yuki_geo_records',
+  xhsLogs: 'yuki_xhs_logs',
+  team: 'yuki_team',
+  checkins: 'yuki_checkins',
+  copilotChat: 'yuki_copilot_chat',
+  copilotBriefDate: 'yuki_copilot_brief_date',
+  copilotBriefData: 'yuki_copilot_brief_data'
+};
+
+function loadData(key, defaultVal) {
+  try {
+    const d = localStorage.getItem(key);
+    return d ? JSON.parse(d) : defaultVal;
+  } catch { return defaultVal; }
+}
+
+function saveData(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+let calendarEvents = loadData(STORAGE_KEYS.calendar, [
+  { id: 1, start: '09:00', end: '09:30', title: '查看今日工作安排', desc: '整理 Calendar & 优先级排序' },
+  { id: 2, start: '09:30', end: '10:00', title: '准备社媒海报文案', desc: '根据月度规划日历执行' },
+  { id: 3, start: '10:00', end: '10:30', title: 'GEO 效果巡检', desc: '检查各 AI 平台表现' },
+  { id: 4, start: '10:30', end: '12:00', title: 'GEO 文章撰写', desc: 'UKEC 英国/香港留学内容' },
+  { id: 5, start: '14:00', end: '14:30', title: '小红书舆情监测', desc: '搜索 UKEC 相关内容' },
+  { id: 6, start: '14:30', end: '15:00', title: '团队 Check-in', desc: '跟进4位员工工作进展' }
+]);
+
+let geoKeywords = loadData(STORAGE_KEYS.geoKeywords, [
+  'UKEC', '英国留学中介推荐', '香港留学申请', 'UKEC怎么样', '英国硕士申请'
+]);
+
+let geoRecords = loadData(STORAGE_KEYS.geoRecords, []);
+let xhsLogs = loadData(STORAGE_KEYS.xhsLogs, []);
+
+let teamMembers = loadData(STORAGE_KEYS.team, [
+  { id: 1, name: '成员 A', role: '内容运营', color: '#6b8fc9' },
+  { id: 2, name: '成员 B', role: '设计师', color: '#c97b6b' },
+  { id: 3, name: '成员 C', role: '文案策划', color: '#7a9e7e' },
+  { id: 4, name: '成员 D', role: '渠道运营', color: '#9b7ec9' }
+]);
+
+let checkins = loadData(STORAGE_KEYS.checkins, {});
+
+let currentTemplate = 'uk-guide';
+
+// ============================================================
+// SETTINGS & API KEY MANAGEMENT
+// ============================================================
+function toggleSettings() {
+  const panel = document.getElementById('settingsPanel');
+  const isOpen = panel.style.display !== 'none';
+  if (isOpen) {
+    panel.style.display = 'none';
+    const backdrop = document.querySelector('.settings-backdrop');
+    if (backdrop) backdrop.remove();
+  } else {
+    panel.style.display = 'block';
+    const backdrop = document.createElement('div');
+    backdrop.className = 'settings-backdrop';
+    backdrop.onclick = toggleSettings;
+    document.body.appendChild(backdrop);
+    // Load existing values
+    const savedKey = localStorage.getItem('yuki_deepseek_key');
+    if (savedKey) {
+      document.getElementById('deepseekApiKey').value = savedKey;
+      document.getElementById('apiKeyStatus').textContent = '已配置 ✓';
+      document.getElementById('apiKeyStatus').style.color = 'var(--success)';
+    }
+    const fc = loadData('yuki_feishu_config', null);
+    if (fc) {
+      document.getElementById('settingsFeishuAppId').value = fc.appId || '';
+      document.getElementById('settingsFeishuAppSecret').value = fc.appSecret || '';
+      document.getElementById('feishuConfigStatus').textContent = '已配置 ✓';
+      document.getElementById('feishuConfigStatus').style.color = 'var(--success)';
+    }
+  }
+}
+
+function toggleKeyVisibility() {
+  const input = document.getElementById('deepseekApiKey');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+function saveApiKey() {
+  const key = document.getElementById('deepseekApiKey').value.trim();
+  if (!key) { showToast('请输入 API Key'); return; }
+  if (!key.startsWith('sk-')) { showToast('API Key 格式不正确，应以 sk- 开头'); return; }
+  localStorage.setItem('yuki_deepseek_key', key);
+  document.getElementById('apiKeyStatus').textContent = '已配置 ✓';
+  document.getElementById('apiKeyStatus').style.color = 'var(--success)';
+  updateSettingsBtnIndicator();
+  showToast('API Key 已保存 ✓');
+}
+
+function clearApiKey() {
+  if (!confirm('确定要清除 API Key 吗？')) return;
+  localStorage.removeItem('yuki_deepseek_key');
+  document.getElementById('deepseekApiKey').value = '';
+  document.getElementById('apiKeyStatus').textContent = '未配置';
+  document.getElementById('apiKeyStatus').style.color = '';
+  updateSettingsBtnIndicator();
+  showToast('API Key 已清除');
+}
+
+async function testApiKey() {
+  const key = document.getElementById('deepseekApiKey').value.trim() || localStorage.getItem('yuki_deepseek_key');
+  const resultEl = document.getElementById('apiTestResult');
+  resultEl.style.display = 'block';
+  resultEl.style.background = 'var(--bg-input)';
+  resultEl.style.color = 'var(--text-secondary)';
+  resultEl.textContent = '⏳ 测试中...';
+
+  try {
+    const res = await callAI('请回复"连接成功"四个字，不要说其他任何内容。', 50, key);
+    resultEl.style.background = '#7ec97a22';
+    resultEl.style.color = 'var(--success)';
+    resultEl.textContent = '✅ 连接成功！DeepSeek API Key 有效，AI 功能已就绪。';
+  } catch (err) {
+    resultEl.style.background = '#c96b6b22';
+    resultEl.style.color = 'var(--danger)';
+    resultEl.textContent = '❌ ' + err.message;
+  }
+}
+
+function saveFeishuSettingsConfig() {
+  const appId = document.getElementById('settingsFeishuAppId').value.trim();
+  const appSecret = document.getElementById('settingsFeishuAppSecret').value.trim();
+  if (!appId || !appSecret) { showToast('请填写 App ID 和 App Secret'); return; }
+  saveData('yuki_feishu_config', { appId, appSecret });
+  document.getElementById('feishuConfigStatus').textContent = '已配置 ✓';
+  document.getElementById('feishuConfigStatus').style.color = 'var(--success)';
+  // Also sync to the poster module's Feishu card if visible
+  const fc = document.getElementById('feishuApiCard');
+  if (fc) {
+    fc.style.display = 'block';
+    document.getElementById('feishuAppId').value = appId;
+    document.getElementById('feishuAppSecret').value = appSecret;
+  }
+  showToast('飞书配置已保存 ✓');
+}
+
+function updateSettingsBtnIndicator() {
+  const btn = document.getElementById('settingsBtn');
+  const hasKey = !!localStorage.getItem('yuki_deepseek_key');
+  btn.textContent = hasKey ? '⚙️ 设置' : '⚙️ 设置（需配置）';
+  btn.style.borderColor = hasKey ? '' : 'var(--accent-warm)';
+  btn.style.color = hasKey ? '' : 'var(--accent-warm)';
+}
+
+// ============================================================
+// SHARED AI API CALLER (DeepSeek)
+// ============================================================
+async function callAI(prompt, maxTokens = 1000, overrideKey = null, opts = {}) {
+  const apiKey = overrideKey || localStorage.getItem('yuki_deepseek_key');
+
+  if (!apiKey) {
+    throw new Error('未配置 API Key。请点击右上角「⚙️ 设置」，填入你的 DeepSeek API Key。\n\n前往 platform.deepseek.com 免费注册即可获取，新用户赠送 500 万 tokens。');
+  }
+
+  const body = {
+    model: 'deepseek-chat',
+    max_tokens: maxTokens,
+    messages: [{ role: 'user', content: prompt }]
+  };
+  if (opts.jsonMode) {
+    body.response_format = { type: 'json_object' };
+  }
+  if (opts.temperature !== undefined) {
+    body.temperature = opts.temperature;
+  }
+
+  let response;
+  try {
+    response = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(body)
+    });
+  } catch (netErr) {
+    // 网络/CORS 类错误，给出具体诊断
+    const isFile = location.protocol === 'file:';
+    if (isFile) {
+      throw new Error('网络请求失败：你正在用 file:// 本地打开 HTML，浏览器会阻止跨域请求（CORS）。\n\n请把这个页面放到 GitHub Pages 或任何 https 服务上访问，副驾就能正常工作。');
+    }
+    throw new Error('网络请求失败：' + (netErr.message || '请检查网络连接')) ;
+  }
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    if (response.status === 401) {
+      throw new Error('API Key 无效或已过期，请在设置中更新。');
+    } else if (response.status === 429) {
+      throw new Error('请求频率超限，请稍后再试。');
+    } else if (response.status === 402) {
+      throw new Error('账户余额不足，请前往 platform.deepseek.com 充值。');
+    } else {
+      throw new Error('API 错误 (' + response.status + '): ' + (errData.error?.message || '未知错误'));
+    }
+  }
+
+  const data = await response.json();
+  const text = data.choices?.[0]?.message?.content;
+  if (!text) throw new Error('AI 未返回有效内容，请重试。');
+  return text;
+}
+
+// ============================================================
+// MODULE 10: PROMPT LIBRARY
+// ============================================================
+const PROMPT_CATEGORIES = [
+  { id: 'all', label: '全部', icon: '✨' },
+  { id: 'setup', label: 'AI 协作设定', icon: '🤝' },
+  { id: 'yuqing', label: '舆情分析', icon: '📡' },
+  { id: 'content', label: '内容撰写', icon: '✍️' },
+  { id: 'research', label: '用户调研', icon: '🔍' },
+  { id: 'report', label: '向上沟通', icon: '📋' },
+  { id: 'strategy', label: '品牌策略', icon: '🎯' }
+];
+
+const PROMPTS = [
+  {
+    id: 'p01',
+    icon: '📊',
+    cat: 'yuqing',
+    catLabel: '舆情分析',
+    title: '小红书舆情周报',
+    desc: '基于本周笔记/评论数据，输出含正负声量、风险点、下一步建议的结构化周报。',
+    tags: ['周报', '小红书', '声量分析'],
+    tip: '把本周笔记标题、正文、评论区典型内容粘贴进去，越多越准。如果有上周数据，把上周关键数据也贴上，AI 会自动做对比。',
+    text: `你是 UKEC 的品牌公关助理，擅长对小红书平台的舆情进行结构化分析。
+
+请基于我提供的本周小红书笔记/评论内容，输出舆情分析周报：
+
+【粘贴本周相关笔记标题、正文、评论区典型内容】
+
+输出要求：
+1. 数据概览：笔记总数、互动量级、正/负/中性占比
+2. 正面声量集中在哪几个话题？各举 1-2 个典型笔记
+3. 负面声量集中在哪几个话题？是否涉及顾问、申请结果、退费、文书等高敏感点？
+4. 与上周对比的变化趋势（如有上周数据请说明）
+5. 本周需要重点关注/介入的 3 条内容，以及建议的处置方式
+6. 给品牌部下一步内容方向的 1-2 条建议
+
+直接输出，不寒暄，不复述我的要求。`
+  },
+  {
+    id: 'p02',
+    icon: '⚖️',
+    cat: 'yuqing',
+    catLabel: '舆情分析',
+    title: '竞品对标分析',
+    desc: '横向对比 UKEC 与新东方/启德/AI工具型机构等竞品，输出可直接汇报的优劣势分析。',
+    tags: ['竞品', '对标', '差异化'],
+    tip: '建议先在小红书/抖音搜索竞品笔记数、互动量、Top3 评论关键词等数据，越具体输出越有说服力。',
+    text: `你是 UKEC 的品牌公关分析师。请基于我提供的 UKEC 与竞品的对比数据，输出一份竞品分析。
+
+UKEC 核心信息（分析时使用）：
+- 1999 年成立于英国曼彻斯特，深耕英国留学 27 年
+- 10 万+成功案例，中外 20+ 城市分支机构
+- 5+1 服务承诺：快、准确、NICE、透明、超预期
+- 2026 年升级为 UKEC+，布局多国联申
+
+对比对象：【填入竞品名，如新东方前途/启德/GET留学/AI工具型机构】
+
+数据：
+【粘贴笔记量、互动量、用户评论关键词、定价、服务模式、核心卖点等】
+
+输出要求：
+1. UKEC 相对竞品的核心优势（3-5 点，每点配数据/案例支撑）
+2. UKEC 相对竞品的劣势/需警惕的方向（2-3 点）
+3. 竞品独特玩法中，UKEC 可借鉴的 1-2 点
+4. 一句话总结 UKEC vs 竞品的本质差异
+
+风格：专业但不学术，可直接用于内部汇报。`
+  },
+  {
+    id: 'p03',
+    icon: '🚨',
+    cat: 'yuqing',
+    catLabel: '舆情分析',
+    title: '单条负面舆情研判',
+    desc: '5 步法研判：性质判断 → 信息核实 → 回应决策 → 文案候选 → 内部止损动作。',
+    tags: ['危机', '负面', '研判'],
+    tip: '核心是判断"真投诉 vs 同行打击"。把作者的发文历史、粉丝量、互动数据贴齐，AI 才能识别水军/恶意攻击的特征。',
+    text: `请帮我研判以下这条负面舆情：
+
+平台：【小红书/抖音/微博/知乎/微信文章】
+发布时间：【】
+作者：【账号名/粉丝量/历史发文倾向】
+核心内容：【粘贴原文】
+当前互动量：【点赞、评论、转发数】
+评论区主流声音：【粘贴几条典型评论】
+
+请输出：
+1. 风险等级判断（低/中/高/紧急）及理由
+2. 是真实用户投诉还是同业打击/情绪宣泄？判断依据
+3. 是否需要走撤稿流程？推荐路径（平台投诉函/网信办涉企专区/SEO 下沉/商务沟通）
+4. 公开回应的必要性（必须回应/可以观察/不建议回应）及理由
+5. 如需回应，给一个回应文案初稿
+6. 是否需要给业务部门发内部预警？同步什么内容`
+  },
+  {
+    id: 'p04',
+    icon: '🗂️',
+    cat: 'content',
+    catLabel: '内容撰写',
+    title: '公众号选题策划（用户网格）',
+    desc: '基于纵轴（L1-L4 内容层级）× 横轴（用户标签）的网格，输出 5-8 个候选选题。',
+    tags: ['公众号', '选题', '网格'],
+    tip: '主推方向越聚焦，输出越精准。"英国本科申请"比"留学"好用，"2027 Fall 双非商科生"比"学生"好用。',
+    text: `你是 UKEC 品牌公关的内容策划。请基于我们的用户网格框架策划本期公众号选题。
+
+【用户网格说明】
+纵轴（内容层级）：
+- L1 为什么是 UKEC（品牌层）→ 考核浏览量
+- L2 为什么是 UKEC 推荐的 XX 国家（国家层）→ 考核咨询量
+- L3 为什么是 UKEC 推荐的 XX 大学（学校层）→ 考核咨询量
+- L4 为什么是 UKEC 推荐的 XX 专业（专业层）→ 考核咨询量
+
+横轴（用户标签）：毕业时间、本科背景、性别、专业方向
+
+本期需求：
+- 主推方向：【如英国本科申请/香港研究生/多国联申】
+- 目标用户：【如 2027 Fall 双非商科生】
+- 用稿时间：【】
+- 选题数量：【】
+
+请输出：
+1. 5-8 个候选选题，每条包含：
+   - 标题（吸引点击，但不标题党）
+   - 所在网格坐标（L 几 × 谁）
+   - 考核维度（浏览量 or 咨询量）
+   - 内容钩子（读完用户的下一步动作）
+2. 标记你最推荐重点投入的 1-2 条，说明理由
+3. 每条选题给一句"这篇要回答的核心'为什么'是什么"`
+  },
+  {
+    id: 'p05',
+    icon: '📝',
+    cat: 'content',
+    catLabel: '内容撰写',
+    title: '公众号推文初稿',
+    desc: '基于核心"为什么"、内容钩子、UKEC 内部数据/案例，生成 1500-2500 字的推文初稿。',
+    tags: ['公众号', '推文', '初稿'],
+    tip: '记得贴 UKEC 内部数据（如"我们后台有 1000+ 学生去了利兹大学"），否则 AI 只能写出空洞的行业泛文。',
+    text: `请帮我写一篇 UKEC 公众号推文。
+
+主题：【】
+目标读者：【】
+核心"为什么"：【这篇要回答用户的什么问题】
+内容钩子：【读完用户的下一步动作 - 转发/咨询/收藏】
+字数：【1500-2500 字】
+
+可用素材：
+- UKEC 内部数据/案例：【粘贴】
+- 顾问观点/采访摘录：【粘贴，如有】
+- 行业数据/政策：【粘贴，如有】
+
+写作要求：
+1. 开头用具体场景或数据钩住读者，前 150 字内必须出现核心论点
+2. 中间分 3-4 个小标题展开，每个小标题下有数据/案例支撑
+3. 结尾自然引导到钩子（避免硬广）
+4. UKEC 品牌信息融入要自然，不堆砌资历
+5. 避免 AI 腔（少用"赋能/打造/共创/深耕"等套话），多用短句和具体名词
+
+输出后请告诉我：哪一段你最不确定，需要我补充什么信息可以让你写得更好。`
+  },
+  {
+    id: 'p06',
+    icon: '🏛️',
+    cat: 'content',
+    catLabel: '内容撰写',
+    title: '品牌官方文案（手册/官网）',
+    desc: '已预填 UKEC 标准信息（27年/10万+/5+1承诺/UKEC+），输出极简版+标准版+完整版三档。',
+    tags: ['品牌', '官方', '手册'],
+    tip: '这是高频 prompt——所有对外正式文案都从这里起步。如果有领导新指示，把指示加到"必须出现的关键信息"里。',
+    text: `请帮我写一段 UKEC 的官方文案。
+
+UKEC 核心信息（已确认版本，基于此创作，不要随意发挥）：
+- 1999 年成立于英国曼彻斯特，27 年专注英国教育
+- 英国百所高等院校官方授权 + UCAS + OISC 权威资质
+- 与近百所英国国立大学建立官方合作关系
+- 与部分中国 985/211 高校建立中英校际合作项目
+- 成功帮助 10 万+学子进入牛津、剑桥、LSE、IC 等顶尖名校
+- 中外 20+ 城市分支机构（英国 14 城+中国 8 城+爱尔兰+马来西亚）
+- 5+1 品牌承诺：快、准确、NICE、透明、超预期
+- 2026 年升级为 UKEC+，从英国延伸至全球升学版图
+- 2025 年荣获腾讯教育·年度口碑影响力留学服务品牌
+
+具体需求：
+- 使用场景：【官网/品牌手册/对外 PPT/媒体通稿/招聘材料】
+- 字数要求：【】
+- 语气风格：【正式严肃 / 专业平实 / 略带温度】
+- 必须出现的关键信息：【】
+
+请同时给我三个版本：
+1. 极简版（120 字内，用于 banner/简介框）
+2. 标准版（300 字左右，一般场景）
+3. 完整版（500-800 字，深度场景）`
+  },
+  {
+    id: 'p07',
+    icon: '📱',
+    cat: 'content',
+    catLabel: '内容撰写',
+    title: '小红书种草文案',
+    desc: '生成 800 字以内、口语化、无广告腔的小红书笔记，含标题候选和配图建议。',
+    tags: ['小红书', '种草', '账号'],
+    tip: '账号人设很关键——"UKEC 顾问号"和"UKEC 学姐号"的语气完全不同，别让 AI 自己猜。',
+    text: `请帮我写一条 UKEC 小红书笔记。
+
+笔记主题：【】
+账号人设：【UKEC 官方号 / UKEC 顾问号 / UKEC 学姐学长号】
+目标读者：【】
+
+要求：
+1. 标题：5-12 字，符合小红书爆款公式（数字/反差/痛点/身份标签）
+2. 正文：800 字以内，分段清晰，每段不超过 3 行
+3. 风格：口语化、真实感、避免品牌方说教感
+4. 适当使用 emoji 和符号（但不过度）
+5. 结尾自然引导（评论/收藏/私信）
+6. 文末给 5-8 个相关话题标签
+
+避免：
+- 过度官方/广告腔
+- 一次性塞入太多卖点
+- 生硬的 UKEC 品牌植入
+
+请同时给我：
+- 3 个不同方向的标题候选
+- 1 张配图的拍摄/设计建议`
+  },
+  {
+    id: 'p08',
+    icon: '📰',
+    cat: 'content',
+    catLabel: '内容撰写',
+    title: '媒体通稿/新闻稿',
+    desc: '三段式开头 + 核心传播点结构化，配公众号标题、垂媒标题和投递摘要。',
+    tags: ['通稿', '媒体', '新闻'],
+    tip: '目标媒体不同语气差异很大——36 氪偏行业洞察、南风窗偏深度议题、地方媒体偏成绩展示，先想清楚再让 AI 写。',
+    text: `请帮我写一篇 UKEC 媒体通稿。
+
+新闻事件：【UKEC+品牌升级/获奖/签约/年度数据发布等】
+发布时间：【】
+目标媒体类型：【36氪/南风窗/教育垂直/地方媒体】
+核心传播点（按优先级）：
+1.【】
+2.【】
+3.【】
+
+事件素材：【粘贴细节、嘉宾、数据、引语】
+
+写作要求：
+1. 标题、副标题、导语三段式开头，导语包含"何时何地何人何事何意义"
+2. 主体 3-5 段，每段一个核心信息点
+3. 至少一句 UKEC 高管/合作方引语（可基于素材合理润色）
+4. 结尾段是品牌简介（使用我提供的标准版本，不要自行编写）
+5. 避免"震撼""重磅""引爆"等过度营销词
+6. 字数：【800-1500】
+
+请同时给我：
+- 公众号标题（带情绪/钩子）
+- 垂直媒体标题（更专业克制）
+- 100 字内摘要（用于媒体投递时的 email 正文）`
+  },
+  {
+    id: 'p09',
+    icon: '📋',
+    cat: 'research',
+    catLabel: '用户调研',
+    title: '用户调研问卷设计',
+    desc: '10-15 题问卷，含基础信息、核心研究、行为态度、开放题，每题标注分析关注点。',
+    tags: ['调研', '问卷', '设计'],
+    tip: '"调研目的"写得越清晰，问卷越聚焦。避免"了解学生情况"这种模糊目的，改成"判断双非学生是否会因预算放弃英国"。',
+    text: `我需要做一份 UKEC 的用户调研问卷。
+
+调研目的：【了解 2027 Fall 学生选机构的决策因素 / 测试新产品概念 / 评估品牌认知】
+目标人群：【】
+样本量预期：【】
+回收渠道：【公众号/顾问转发/小红书/已签约学生群】
+是否有奖励：【是/否，预算多少】
+
+请帮我设计：
+1. 一份 10-15 题的问卷，涵盖：
+   - 用户基本信息（控制题量）
+   - 核心研究问题（占比 60%）
+   - 行为/态度题（占比 30%）
+   - 开放题（1-2 题，挖掘洞察）
+2. 每道题标注：题型（单选/多选/量表/开放）、设置目的、分析时关注什么
+3. 问卷开头说明（30 字内）+ 结尾感谢语（含奖励发放说明，如有）
+4. 给我 3 条对回收数据有帮助的"提交前必填"控制项建议
+
+注意：避免诱导性表述、双重否定、一题多问。`
+  },
+  {
+    id: 'p10',
+    icon: '🎤',
+    cat: 'research',
+    catLabel: '用户调研',
+    title: '深度访谈提纲',
+    desc: '按用户决策时间线展开（决策起点→对比→签约→服务→未来），含必问题和追问技巧。',
+    tags: ['访谈', '提纲', '1v1'],
+    tip: '"流失客户"和"已签约学生"的访谈提纲完全不同——流失客户更敏感，需要更多破冰话术。',
+    text: `帮我设计一份 UKEC 学生/家长深度访谈提纲。
+
+访谈目的：【】
+访谈对象：【已签约学生 / 流失客户 / 竞品客户 / 在读学姐学长】
+访谈形式：【1对1线下 / 视频 / 电话】
+预计时长：【30/45/60 分钟】
+
+请输出：
+1. 开场破冰（3 分钟）：用什么话术让对方放松，建立信任
+2. 主体提纲（按用户决策时间线展开），每阶段 3-5 个开放式问题：
+   - 留学决策起点
+   - 选机构对比阶段
+   - 签约决策瞬间
+   - 服务体验过程
+   - 当下/未来期待
+3. 收尾（5 分钟）：用什么问题挖掘"未被满足的需求"
+4. 标记：必问的核心问题（★）
+5. 访谈员提示：哪些问题被访者可能回避或敷衍，需要怎么追问
+
+风格：问题开放、不诱导、不带预设答案。`
+  },
+  {
+    id: 'p11',
+    icon: '📈',
+    cat: 'research',
+    catLabel: '用户调研',
+    title: '调研结果分析与汇报',
+    desc: '同时输出"团队详细版"+"领导汇报版（300字内）"两份产物，差异不调和。',
+    tags: ['调研', '汇报', '双版本'],
+    tip: '把问卷数据汇总（百分比/排序）和访谈逐字稿要点都贴进去。AI 会自己识别冲突点，反而能挖出意外洞察。',
+    text: `请基于我提供的调研原始数据/访谈记录，输出两份产物：
+
+【粘贴问卷数据汇总 / 访谈逐字稿要点】
+
+产物一：内部分析报告（详细版，给品牌部团队看）
+- 调研基本情况（样本、方法、时间）
+- 核心发现 3-5 条（每条配数据/原话佐证）
+- 出乎意料的洞察（数据冲突、反常识、未被假设到的）
+- 数据中的执行问题信号（如有）
+- 后续建议（可执行的，标明优先级）
+
+产物二：领导汇报版（简洁版，给老板看）
+- 一句话结论开头
+- 3 条最重要的发现，每条不超过 2 行
+- 1-2 条建议下一步动作
+- 字数 300 字以内
+- 语气：正式简洁、有数据支撑、避免过度乐观或悲观
+
+如果两份产物的结论有差异，直接告诉我，不要自行调和。`
+  },
+  {
+    id: 'p12',
+    icon: '📨',
+    cat: 'report',
+    catLabel: '向上沟通',
+    title: '工作进度汇报',
+    desc: '结论先行的日报/周报，含数据、问题、决策点，输出书面+口语两个版本。',
+    tags: ['日报', '周报', '汇报'],
+    tip: '"需要支持的事项"一定要写成是/否或 A/B 选择题，让领导直接决策——开放式提问会被无视。',
+    text: `请帮我整理一段【日报/周报/项目进度】。
+
+汇报对象：【领导/老板/跨部门同事】
+汇报场景：【日常微信文字 / 周会发言 / 邮件 / 飞书机器人推送】
+本期完成事项：
+1.【】
+2.【】
+3.【】
+本期未完成/延期事项及原因：【】
+下期计划：【】
+需要领导支持的事项：【】
+
+输出要求：
+1. 结论先行（先讲完成度/关键结果，再讲细节）
+2. 数据具体（"3 篇推文阅读量 5 万+"而不是"传播效果好"）
+3. 问题客观陈述，不甩锅也不过度自责
+4. 需要支持的事项写得具体，让领导可以直接决策（是/否，A/B），不要开放式提问
+5. 字数控制在【200-500 字】
+
+请同时给我两个版本：
+- 偏正式（适合书面/邮件）
+- 偏口语（适合微信）`
+  },
+  {
+    id: 'p13',
+    icon: '🔄',
+    cat: 'report',
+    catLabel: '向上沟通',
+    title: '项目复盘',
+    desc: '"四问框架"复盘：做到了什么/没做好什么/下次怎么做/沉淀什么，含团队同步摘要。',
+    tags: ['复盘', '总结', '四问'],
+    tip: '"我的初步判断"那一栏一定要写——AI 可以在此基础上延展，但不会自己虚构主观判断。',
+    text: `帮我做一份 UKEC【项目名】的复盘。
+
+项目目标（启动时设定）：【】
+项目实际产出：【】
+关键时间节点：【】
+关键执行人：【】
+预算/资源消耗：【】
+我的初步判断：【整体如何，哪些做好了，哪些没做好】
+
+请按"四问框架"输出复盘报告：
+1. 做到了什么？——量化结果对比目标，哪些是超预期的
+2. 没做好什么？——具体偏差点，根本原因（向下挖至少 2 层，不是表面原因）
+3. 下次怎么做？——可执行动作，谁来负责，什么时候
+4. 沉淀什么？——哪些流程/模板/经验可以标准化复用
+
+附加要求：
+- 复盘目的不是追责，语气建设性
+- 区分"系统性问题"vs"个人执行问题"
+- 输出长度：1500 字左右，可直接交付给老板
+- 最后给我一个 200 字的"复盘要点摘要"，用于群里同步给团队`
+  },
+  {
+    id: 'p14',
+    icon: '📅',
+    cat: 'strategy',
+    catLabel: '品牌策略',
+    title: '品牌活动 Schedule 梳理',
+    desc: 'Phase 划分 + 时间表 + 责任人 + 风险预案 + 跨部门节点 + 复盘点，可直接进飞书/石墨。',
+    tags: ['排期', 'Phase', '项目'],
+    tip: '把"启动时间"和"最终交付时间"卡死，AI 会自动反推 Phase 时长。留学行业避开 9-12 月申请高峰会被自动考虑进去。',
+    text: `我需要梳理一个【活动/项目名】的执行 schedule。
+
+项目背景：【】
+启动时间：【】
+关键里程碑（如有）：【】
+最终交付物：【】
+团队成员：【】
+预算：【】
+
+请帮我输出：
+1. 整个项目的 Phase 划分（建议 3-6 个阶段，每阶段一个核心目标）
+2. 每个 Phase 的：起止时间、核心动作（不超过 5 条）、责任人、产出物
+3. 关键风险点和应对预案（每个 Phase 至少标注 1 个）
+4. 跨部门协作节点（业务部/客服/设计/IT 等参与的环节）
+5. 复盘节点设置（建议中期+终期 2 轮）
+
+输出格式：Phase 卡片 + 表格，便于直接放进飞书/石墨。
+
+注意：
+- 时间排布符合留学行业节奏（避开申请高峰、考试季）
+- Phase 之间要有明确的"完成标准"，不是模糊的"差不多了"
+- 老板汇报节点单独标出`
+  },
+  {
+    id: 'p15',
+    icon: '🛡️',
+    cat: 'strategy',
+    catLabel: '品牌策略',
+    title: '危机公关研判与应对',
+    desc: '5 步法：性质判断→信息核实→回应决策→3 个文案候选→内部止损动作。',
+    tags: ['危机', '应对', '研判'],
+    tip: '此 prompt 与"单条负面舆情研判"的区别：这个用于已经升级为危机的事件（多平台扩散、媒体跟进），那个用于单条苗头。',
+    text: `当前出现一起需要研判的舆情/危机事件：
+
+【描述事件：平台、发布人、内容、当前传播范围、是否涉及顾问/合同/退费/学术不端等敏感点】
+
+请按公关研判 5 步法输出：
+
+1. 事件性质判断
+   - 真实投诉 vs 恶意攻击/同行打击？
+   - 风险等级（低/中/高/紧急）及 24 小时内可能的发酵走向
+
+2. 信息核实清单
+   - 内部需要立刻向哪些部门核实什么（客户经理/法务/财务/分中心）
+   - 哪些信息可以对外，哪些必须封锁
+
+3. 对外回应决策
+   - 是否需要公开回应？
+   - 如回应：渠道（原帖评论/官方账号/媒体声明）、回应人身份、回应时机
+   - 如不回应：理由是什么，下一步观察什么指标
+
+4. 三个回应文案候选
+   - A. 共情型（先承认情绪，再讲事实）
+   - B. 事实型（直接讲清楚事实和处理结果）
+   - C. 法律型（涉及不实信息时的严肃回应）
+
+5. 内部止损动作清单
+   - 客服话术准备
+   - 业务部门预警
+   - 高层是否需要介入
+   - 是否需要法务跟进
+
+最后用一句话告诉我：基于现有信息，你最建议的处置路径是哪条，判断依据是什么。`
+  },
+  {
+    id: 'p16',
+    icon: '🤝',
+    cat: 'setup',
+    catLabel: 'AI 协作设定',
+    title: 'AI 工作搭子设定（起手式）',
+    desc: '每次和新 AI 开新对话时先发这段。让 AI 一次性吃透你的角色、公司、用户、沟通偏好，之后直接说任务即可，不用反复解释自己是谁。',
+    tags: ['起手式', '上下文', '通用'],
+    tip: '第一次和新 AI 开对话时必发；同一个对话里不用重复发。在 DeepSeek、豆包、通义、元宝、Claude 都通用。这条 Prompt 跟其他 15 条不一样——它不是任务型，是"上下文设定型"，用一次省后面所有解释。',
+    text: `# 我的工作背景 —— 请先读完再回答我后续的任何问题
+
+## 关于我
+- 我是一位从业 4 年的品牌公关人，目前在 UKEC 担任品牌公关经理。
+- 我直接管理一个 4 人团队：1 名品牌经理、1 名设计、1 名美工、1 名活动策划。
+- 我的工作节奏：单线程承担品牌内容、活动、跨部门支持、舆情、GEO 全部条线，时间高度碎片化，所以我对"快、准、可直接落地"的输出有强烈偏好。
+
+## 关于我的公司
+- UKEC（United Kingdom Education Centre）成立于 1999 年，英国本土总部在曼彻斯特，是英国本土规模较大的教育机构之一。中国总部在成都，并在北京、上海、重庆、西安、厦门、沈阳等城市设有分中心。
+- 主营业务：英国留学申请（本科/硕士/博士）+ 香港留学申请。
+- 行业身份：英国 UCAS 官方授权招生机构、英国内政部 OISC 授权、与英国 120+ 所大学有官方合作关系。
+- 品牌核心主张："5+1" 品牌承诺 —— 快、准确、NICE、透明、超预期、梦想校。
+- 主要竞品：启德、金吉列、新东方前途出国、立思辰、指南者等综合型留学机构。UKEC 的差异化是"英国基因"、深度院校资源、服务好。
+- 注：上述是公开信息，**任何 UKEC 的具体数据、案例、排名，如果你不确定，请直接说"这个需要你来补"，不要编造。**
+
+## 我的目标用户
+- 主要用户：准备申请英国/香港留学的学生（高中至研究生阶段，集中在 18–25 岁）及其家长。
+- 用户特点：决策周期长（提前 1–2 年规划）、客单价高（数万至数十万人民币）、信任成本高、家长往往是真正的决策者或共同决策者。
+- 信息获取渠道：小红书 > 知乎 > 抖音 > 微信公众号 > 行业垂类社区 > AI 搜索（DeepSeek、豆包、通义、元宝等，这是我今年重点投入的赛道）。
+
+## 我的日常工作
+1. **品牌内容发布**：小红书、微信公众号等平台的内容产出与节奏管理。
+2. **品牌活动策划**：直播活动、教育展、校友活动、跨界合作等线上线下活动。
+3. **跨部门支持**：为顾问团队、市场获客、海外团队提供品牌物料和传播弹药。
+4. **舆情监测与处理**：重点是小红书的口碑与负面，留学行业舆情对决策影响极大。
+5. **设计统筹**：与团队设计/美工协作，把控品牌视觉一致性。
+6. **GEO（生成式引擎优化）**：监测 UKEC 在主流国产 AI 平台的露出，并通过内容投放优化 AI 推荐结果。
+
+## 跟我对话时请你遵守以下规则
+1. **拒绝套路化"标准答案"**。"先做用户画像、再做定位、再做内容矩阵"这种通用 framework 我看了 4 年了，请直接给我结合留学行业和我具体场景的判断。如果你判断这次任务确实需要套用某个框架才能答好，请先明确说"我接下来要用 XX 框架，因为 XX"，再开始。
+2. **具体优先于抽象**。不要"建议加强情感连接"，要"建议把这句改成 XXX"。不要"提升内容质量"，要"删掉第二段、把数据前移"。
+3. **结论先行**。先给你的判断/建议，再给推理过程；先给主推方案，再给 1–2 个备选。
+4. **舆情类问题保守谨慎**。留学是高信任成本决策，任何回应优先考虑长期信任，不为短期声量牺牲品牌。涉及对手品牌时请中立。
+5. **不要假设我能调动大资源**。我的团队就 4 个人，预算有限。请给"我下周就能落地"的方案，而不是"建议联合 KOL 矩阵投放百万级预算"。
+6. **不要重复确认我的需求**。我说"帮我写小红书文案"，请直接动笔，不要先问我"你想突出哪些卖点呢？"——除非任务真的需要澄清，否则直接给一版让我改。
+7. **语气**：把我当一个有判断力的同行，不是新手也不是甲方。可以挑战我的想法，但要给理由。
+
+---
+理解我的背景后，我接下来要你帮我做的具体事情是：
+【在这里粘贴你这次的具体任务】`
+  }
+];
+
+let promptActiveCat = 'all';
+let promptCurrentId = null;
+
+function renderPromptCategories() {
+  const counts = {};
+  PROMPT_CATEGORIES.forEach(c => {
+    counts[c.id] = c.id === 'all' ? PROMPTS.length : PROMPTS.filter(p => p.cat === c.id).length;
+  });
+  const html = PROMPT_CATEGORIES.map(c => `
+    <button class="prompt-cat-btn ${c.id === promptActiveCat ? 'active' : ''}" onclick="setPromptCategory('${c.id}')">
+      <span>${c.icon}</span>
+      <span>${c.label}</span>
+      <span class="cat-count">${counts[c.id]}</span>
+    </button>
+  `).join('');
+  document.getElementById('promptCategories').innerHTML = html;
+}
+
+function setPromptCategory(catId) {
+  promptActiveCat = catId;
+  renderPromptCategories();
+  filterPrompts();
+}
+
+function filterPrompts() {
+  const search = (document.getElementById('promptSearch')?.value || '').trim().toLowerCase();
+  const filtered = PROMPTS.filter(p => {
+    const matchCat = promptActiveCat === 'all' || p.cat === promptActiveCat;
+    if (!matchCat) return false;
+    if (!search) return true;
+    const haystack = (p.title + ' ' + p.desc + ' ' + p.tags.join(' ') + ' ' + p.catLabel).toLowerCase();
+    return haystack.includes(search);
+  });
+  renderPromptGrid(filtered);
+  document.getElementById('promptStats').textContent = `${filtered.length} / ${PROMPTS.length} PROMPTS`;
+}
+
+function renderPromptGrid(list) {
+  const grid = document.getElementById('promptGrid');
+  if (!list.length) {
+    grid.innerHTML = `
+      <div class="prompt-empty">
+        <div class="prompt-empty-icon">🔍</div>
+        <div>没有找到匹配的 Prompt</div>
+        <div style="margin-top:8px;font-size:11px;">试试别的关键词，或切换到「全部」分类</div>
+      </div>`;
+    return;
+  }
+  grid.innerHTML = list.map(p => `
+    <div class="prompt-card" onclick="openPromptModal('${p.id}')">
+      <div class="prompt-card-top">
+        <div class="prompt-card-icon">${p.icon}</div>
+        <span class="prompt-card-cat cat-${p.cat}">${p.catLabel}</span>
+      </div>
+      <div class="prompt-card-title">${p.title}</div>
+      <div class="prompt-card-desc">${p.desc}</div>
+      <div class="prompt-card-footer">
+        <div class="prompt-card-tags">
+          ${p.tags.map(t => `<span class="prompt-card-tag">#${t}</span>`).join('')}
+        </div>
+        <div class="prompt-card-action">查看 →</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openPromptModal(id) {
+  const p = PROMPTS.find(x => x.id === id);
+  if (!p) return;
+  promptCurrentId = id;
+  document.getElementById('promptModalIcon').textContent = p.icon;
+  document.getElementById('promptModalTitle').textContent = p.title;
+  document.getElementById('promptModalDesc').textContent = p.desc;
+  // Highlight 【】placeholders
+  const highlighted = p.text.replace(/【[^】]*】/g, m => `<span class="placeholder-var">${m}</span>`);
+  document.getElementById('promptModalPre').innerHTML = highlighted;
+  if (p.tip) {
+    document.getElementById('promptModalTip').style.display = 'block';
+    document.getElementById('promptModalTipText').textContent = p.tip;
+  } else {
+    document.getElementById('promptModalTip').style.display = 'none';
+  }
+  // Reset copy button label
+  document.getElementById('promptCopyBtn').innerHTML = '📋 复制 Prompt';
+  document.getElementById('promptModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePromptModal() {
+  document.getElementById('promptModal').classList.remove('show');
+  document.body.style.overflow = '';
+  promptCurrentId = null;
+}
+
+function copyPromptText() {
+  if (!promptCurrentId) return;
+  const p = PROMPTS.find(x => x.id === promptCurrentId);
+  if (!p) return;
+  navigator.clipboard.writeText(p.text).then(() => {
+    showToast('Prompt 已复制 ✓ 现在去粘贴到 AI 对话框');
+    const btn = document.getElementById('promptCopyBtn');
+    btn.innerHTML = '✓ 已复制';
+    setTimeout(() => { btn.innerHTML = '📋 复制 Prompt'; }, 2000);
+  }).catch(() => {
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = p.text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast('Prompt 已复制 ✓'); } catch(e) { showToast('复制失败，请手动选择文本'); }
+    document.body.removeChild(ta);
+  });
+}
+
+// Close modal on ESC key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('promptModal')?.classList.contains('show')) {
+    closePromptModal();
+  }
+});
+
+function renderPromptLibrary() {
+  renderPromptCategories();
+  filterPrompts();
+}
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+function init() {
+  // Set date
+  const now = new Date();
+  const opts = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+  document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', opts);
+
+  renderCalendar();
+  renderGeoKeywords();
+  renderGeoRecords();
+  renderXHSLogs();
+  renderTeam();
+  renderEmotionGrid();
+  renderEmotionHistory();
+  renderEnneagramGrid();
+  renderMarketingGrid();
+  renderMarketingChat();
+  renderPromptLibrary();
+  updateSettingsBtnIndicator();
+  copilotInit();
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function switchTab(tabId) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.module-panel').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('panel-' + tabId).classList.add('active');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// MODULE 1: CALENDAR
+// ============================================================
+function toggleCalForm() {
+  const f = document.getElementById('calAddForm');
+  f.style.display = f.style.display === 'none' ? 'grid' : 'none';
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const sorted = [...calendarEvents].sort((a, b) => a.start.localeCompare(b.start));
+  grid.innerHTML = sorted.map(ev => `
+    <div class="cal-event">
+      <div class="time">${ev.start} - ${ev.end}</div>
+      <div class="title">${ev.title}</div>
+      <div class="desc">${ev.desc || ''}</div>
+      <button class="btn btn-sm btn-danger" style="margin-top:8px;font-size:11px;" onclick="removeCalEvent(${ev.id})">删除</button>
+    </div>
+  `).join('');
+}
+
+function addCalEvent() {
+  const start = document.getElementById('calStartTime').value;
+  const end = document.getElementById('calEndTime').value;
+  const title = document.getElementById('calTitle').value.trim();
+  const desc = document.getElementById('calDesc').value.trim();
+  if (!title) { showToast('请输入事项名称'); return; }
+  calendarEvents.push({ id: Date.now(), start, end, title, desc });
+  saveData(STORAGE_KEYS.calendar, calendarEvents);
+  renderCalendar();
+  toggleCalForm();
+  document.getElementById('calTitle').value = '';
+  document.getElementById('calDesc').value = '';
+  showToast('日程已添加 ✓');
+}
+
+function removeCalEvent(id) {
+  calendarEvents = calendarEvents.filter(e => e.id !== id);
+  saveData(STORAGE_KEYS.calendar, calendarEvents);
+  renderCalendar();
+  showToast('日程已删除');
+}
+
+// ============================================================
+// MODULE 2: POSTER & COPY (Claude API)
+// ============================================================
+async function generateCopy() {
+  const topic = document.getElementById('copyTopic').value.trim();
+  if (!topic) { showToast('请输入发布主题'); return; }
+  const platform = document.getElementById('copyPlatform').value;
+  const style = document.getElementById('copyStyle').value;
+  const extra = document.getElementById('copyExtra').value.trim();
+
+  const output = document.getElementById('copyOutput');
+  const btn = document.getElementById('genCopyBtn');
+  output.innerHTML = '<div class="spinner"></div>';
+  btn.disabled = true;
+  btn.textContent = '⏳ 生成中...';
+
+  try {
+    const prompt = `你是UKEC（英国教育中心）的资深社交媒体文案策划。请根据以下要求生成一篇适合${platform}平台的文案：
+
+主题：${topic}
+风格：${style}
+${extra ? '额外要求：' + extra : ''}
+
+要求：
+1. 文案要符合${platform}平台的调性和格式
+2. 包含合适的emoji
+3. 如果是小红书，需要包含话题标签
+4. 文案要有吸引力，能引发互动
+5. 适当融入UKEC的品牌信息
+6. 直接输出文案内容，不要加任何前缀说明`;
+
+    const text = await callAI(prompt, 1000);
+    output.innerHTML = '';
+    output.textContent = text;
+  } catch (err) {
+    output.innerHTML = '';
+    output.textContent = err.message;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✨ 生成文案';
+}
+
+function regenerateCopy() { generateCopy(); }
+
+function copyCopyText() {
+  const text = document.getElementById('copyOutput').textContent;
+  if (text && !text.includes('点击')) {
+    navigator.clipboard.writeText(text);
+    showToast('文案已复制 ✓');
+  }
+}
+
+// ============================================================
+// MODULE 3: GEO MONITOR
+// ============================================================
+function renderGeoKeywords() {
+  const container = document.getElementById('geoKeywordChips');
+  container.innerHTML = geoKeywords.map((kw, i) => `
+    <div class="keyword-chip">
+      ${kw}
+      <span class="remove" onclick="removeGeoKeyword(${i})">✕</span>
+    </div>
+  `).join('');
+}
+
+function addGeoKeyword() {
+  const input = document.getElementById('geoKeywordInput');
+  const val = input.value.trim();
+  if (!val) return;
+  geoKeywords.push(val);
+  saveData(STORAGE_KEYS.geoKeywords, geoKeywords);
+  renderGeoKeywords();
+  input.value = '';
+  showToast('关键词已添加 ✓');
+}
+
+function removeGeoKeyword(i) {
+  geoKeywords.splice(i, 1);
+  saveData(STORAGE_KEYS.geoKeywords, geoKeywords);
+  renderGeoKeywords();
+}
+
+function addGeoRecord() {
+  const platform = document.getElementById('geoRecordPlatform').value;
+  const keyword = document.getElementById('geoRecordKeyword').value.trim();
+  const result = document.getElementById('geoRecordResult').value;
+  const note = document.getElementById('geoRecordNote').value.trim();
+  if (!keyword) { showToast('请输入关键词'); return; }
+  geoRecords.unshift({
+    time: new Date().toLocaleString('zh-CN'),
+    platform, keyword, result, note
+  });
+  saveData(STORAGE_KEYS.geoRecords, geoRecords);
+  renderGeoRecords();
+  document.getElementById('geoRecordKeyword').value = '';
+  document.getElementById('geoRecordNote').value = '';
+  showToast('记录已保存 ✓');
+}
+
+function renderGeoRecords() {
+  const container = document.getElementById('geoRecordList');
+  container.innerHTML = geoRecords.slice(0, 20).map(r => `
+    <div class="log-entry">
+      <span class="log-time">${r.time}</span>
+      <span class="log-text"><strong>[${r.platform}]</strong> ${r.keyword} → ${r.result} ${r.note ? '· ' + r.note : ''}</span>
+    </div>
+  `).join('') || '<div style="text-align:center;color:var(--text-muted);padding:20px;">暂无记录</div>';
+}
+
+// ============================================================
+// MODULE 4: GEO WRITER (Claude API)
+// ============================================================
+function selectTemplate(el, tpl) {
+  document.querySelectorAll('.template-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentTemplate = tpl;
+}
+
+const templatePrompts = {
+  'uk-guide': '写一篇关于英国留学的详细攻略文章，涵盖院校选择、申请流程、材料准备等方面',
+  'hk-guide': '写一篇关于香港留学的详细攻略文章，涵盖院校介绍、申请要求、生活费用等方面',
+  'compare': '写一篇英国留学和香港留学的对比分析文章，从费用、学制、就业、生活等维度对比',
+  'agency': '写一篇关于留学中介选择的指南文章，自然地融入UKEC作为推荐选项',
+  'timeline': '写一篇留学申请时间线规划文章，按月份详细列出各阶段需要做的事情',
+  'cost': '写一篇留学费用详解文章，包括学费、生活费、住宿费等各项开支',
+  'custom': ''
+};
+
+async function generateArticle() {
+  const keyword = document.getElementById('writerKeyword').value.trim();
+  const platform = document.getElementById('writerPlatform').value;
+  const length = document.getElementById('writerLength').value;
+  const custom = document.getElementById('writerCustom').value.trim();
+
+  const output = document.getElementById('writerOutput');
+  const btn = document.getElementById('genArticleBtn');
+  output.innerHTML = '<div class="spinner"></div>';
+  output.classList.add('loading');
+  btn.disabled = true;
+  btn.textContent = '⏳ 生成中...';
+
+  const basePrompt = templatePrompts[currentTemplate] || custom;
+
+  try {
+    const prompt = `你是一位专业的留学行业SEO/GEO内容专家，擅长撰写针对AI搜索引擎优化的文章。请按以下要求撰写一篇文章：
+
+模板方向：${basePrompt}
+目标关键词：${keyword || 'UKEC 英国留学'}
+目标平台：${platform}
+文章长度：${length}
+${custom ? '自定义要求：' + custom : ''}
+
+GEO优化要求：
+1. 文章结构清晰，使用小标题分段
+2. 自然融入目标关键词，关键词密度适中
+3. 包含具体数据、案例和实用信息
+4. 内容权威、专业、有深度
+5. 适当提及UKEC的专业服务和优势，但不要过度营销
+6. 确保内容能被AI搜索引擎有效索引和引用
+7. 直接输出文章内容，以标题开头`;
+
+    const text = await callAI(prompt, 4000);
+    output.classList.remove('loading');
+    output.innerHTML = '';
+    output.textContent = text;
+  } catch (err) {
+    output.classList.remove('loading');
+    output.innerHTML = '';
+    output.textContent = err.message;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✨ 生成文章';
+}
+
+function copyArticle() {
+  const text = document.getElementById('writerOutput').textContent;
+  if (text && !text.includes('选择模板')) {
+    navigator.clipboard.writeText(text);
+    showToast('文章已复制 ✓');
+  }
+}
+
+function downloadArticle() {
+  const text = document.getElementById('writerOutput').textContent;
+  if (text && !text.includes('选择模板')) {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `GEO_Article_${new Date().toISOString().slice(0,10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('文章已下载 ✓');
+  }
+}
+
+// ============================================================
+// MODULE 5: XHS MONITOR
+// ============================================================
+function searchXHS() {
+  const query = document.getElementById('xhsSearchInput').value.trim();
+  if (!query) return;
+  openXHS(query);
+}
+
+function openXHS(keyword) {
+  window.open(`https://www.xiaohongshu.com/search_result?keyword=${encodeURIComponent(keyword)}`, '_blank');
+}
+
+function toggleXHSLogForm() {
+  const f = document.getElementById('xhsLogForm');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+function addXHSLog() {
+  const keyword = document.getElementById('xhsLogKeyword').value.trim();
+  const sentiment = document.getElementById('xhsLogSentiment').value;
+  const content = document.getElementById('xhsLogContent').value.trim();
+  if (!content) { showToast('请输入舆情内容'); return; }
+
+  const sentimentLabels = { positive: '正面', negative: '负面', neutral: '中性' };
+  xhsLogs.unshift({
+    time: new Date().toLocaleString('zh-CN'),
+    keyword: keyword || 'UKEC',
+    sentiment,
+    sentimentLabel: sentimentLabels[sentiment],
+    content
+  });
+  saveData(STORAGE_KEYS.xhsLogs, xhsLogs);
+  renderXHSLogs();
+  document.getElementById('xhsLogKeyword').value = '';
+  document.getElementById('xhsLogContent').value = '';
+  showToast('舆情已记录 ✓');
+}
+
+function renderXHSLogs() {
+  const container = document.getElementById('xhsLogList');
+  container.innerHTML = xhsLogs.slice(0, 30).map(l => `
+    <div class="log-entry">
+      <span class="log-time">${l.time}</span>
+      <span class="log-text"><strong>[${l.keyword}]</strong> ${l.content}</span>
+      <span class="log-sentiment ${l.sentiment}">${l.sentimentLabel}</span>
+    </div>
+  `).join('') || '<div style="text-align:center;color:var(--text-muted);padding:20px;">暂无舆情记录，点击上方按钮开始记录</div>';
+}
+
+// ============================================================
+// MODULE 6: TEAM CHECK-IN
+// ============================================================
+function renderTeam() {
+  const grid = document.getElementById('teamGrid');
+  const today = new Date().toISOString().slice(0, 10);
+  grid.innerHTML = teamMembers.map(m => {
+    const memberCheckins = (checkins[m.id] || []).slice(0, 7);
+    const todayCheckin = memberCheckins.find(c => c.date === today);
+    return `
+      <div class="member-card">
+        <div class="member-header">
+          <div class="member-avatar" style="background:${m.color}">${m.name.charAt(0)}</div>
+          <div>
+            <div class="member-name">${m.name}</div>
+            <div class="member-role">${m.role}</div>
+          </div>
+          <span class="status-tag ${todayCheckin ? 'online' : 'offline'}">${todayCheckin ? '已签到' : '未签到'}</span>
+        </div>
+        <div class="checkin-input-row">
+          <input type="text" id="checkin-${m.id}" placeholder="输入今日工作内容..." style="flex:1;">
+          <button class="btn btn-primary btn-sm" onclick="addCheckin(${m.id})">签到</button>
+        </div>
+        <div class="checkin-list">
+          ${memberCheckins.map(c => `
+            <div class="checkin-item">
+              <span class="ci-date">${c.date}</span>
+              <span class="ci-content">${c.content}</span>
+            </div>
+          `).join('') || '<div style="color:var(--text-muted);font-size:12px;padding:8px;">暂无签到记录</div>'}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  renderMemberSetup();
+}
+
+function addCheckin(memberId) {
+  const input = document.getElementById(`checkin-${memberId}`);
+  const content = input.value.trim();
+  if (!content) { showToast('请输入工作内容'); return; }
+  const today = new Date().toISOString().slice(0, 10);
+  if (!checkins[memberId]) checkins[memberId] = [];
+  checkins[memberId].unshift({ date: today, content });
+  saveData(STORAGE_KEYS.checkins, checkins);
+  renderTeam();
+  showToast('签到成功 ✓');
+}
+
+function toggleMemberSetup() {
+  const el = document.getElementById('memberSetup');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function renderMemberSetup() {
+  const container = document.getElementById('memberSetupList');
+  if (!container) return;
+  container.innerHTML = teamMembers.map(m => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <div class="member-avatar" style="background:${m.color};width:28px;height:28px;font-size:12px;flex-shrink:0;">${m.name.charAt(0)}</div>
+      <span style="flex:1;font-size:13px;">${m.name} · ${m.role}</span>
+      <button class="btn btn-sm btn-danger" onclick="removeMember(${m.id})">移除</button>
+    </div>
+  `).join('');
+}
+
+function addMember() {
+  const name = document.getElementById('newMemberName').value.trim();
+  const role = document.getElementById('newMemberRole').value.trim();
+  if (!name) { showToast('请输入成员名称'); return; }
+  const colors = ['#6b8fc9','#c97b6b','#7a9e7e','#9b7ec9','#c9b46b','#c96b9b'];
+  teamMembers.push({
+    id: Date.now(),
+    name,
+    role: role || '团队成员',
+    color: colors[teamMembers.length % colors.length]
+  });
+  saveData(STORAGE_KEYS.team, teamMembers);
+  renderTeam();
+  document.getElementById('newMemberName').value = '';
+  document.getElementById('newMemberRole').value = '';
+  showToast('成员已添加 ✓');
+}
+
+function removeMember(id) {
+  teamMembers = teamMembers.filter(m => m.id !== id);
+  saveData(STORAGE_KEYS.team, teamMembers);
+  renderTeam();
+  showToast('成员已移除');
+}
+
+// ============================================================
+// MODULE 7: EMOTION CARDS
+// ============================================================
+const emotions = [
+  {
+    id: 'calm', emoji: '😌', name: '平静', desc: '内心安定、可以理性沟通',
+    color: '#7a9e9e', bg: '#7a9e9e1f',
+    feeling: {
+      body: '呼吸平稳，肩膀是松的，心跳规律不快。身体没有紧绷感，像是在一张舒服的椅子上。',
+      inner: '"事情会按它的节奏发生，不用急"。脑子清亮，既不兴奋也不低落。',
+      behavior: '说话节奏慢，愿意听别人把话说完，能容纳不同意见，不急着反驳。',
+      need: '继续维持这份稳定感，保护好这个状态不被突发情绪打扰。'
+    }
+  },
+  {
+    id: 'confident', emoji: '💪', name: '自信', desc: '状态饱满、可以推进难点',
+    color: '#c9b46b', bg: '#c9b46b1f',
+    feeling: {
+      body: '站姿挺直，能量充沛，眼神聚焦。手脚轻盈，有想做事的冲动。',
+      inner: '"这件事我能搞定"，对结果有把握。看得清路径，也知道自己可以承担后果。',
+      behavior: '主动推进、敢于表态、不怕被挑战。说话直接、节奏快、愿意拍板。',
+      need: '被看见、被信任、有发挥和决策的空间。'
+    }
+  },
+  {
+    id: 'excited', emoji: '🌟', name: '兴奋', desc: '充满热情、易感染他人',
+    color: '#d4a574', bg: '#d4a5741f',
+    feeling: {
+      body: '心跳加快，语速快，手势多，坐不住。像有股电流在身体里。',
+      inner: '"太棒了！""还可以这样！"脑子里同时跑着好几个可能性，停不下来。',
+      behavior: '容易感染他人、想立刻行动、不太耐烦听细节、容易打断别人。',
+      need: '有人一起分享这份热情，但也要警惕此刻做出冲动决策。'
+    }
+  },
+  {
+    id: 'grateful', emoji: '🙏', name: '感激', desc: '心存感谢、适合表达肯定',
+    color: '#c97b9b', bg: '#c97b9b1f',
+    feeling: {
+      body: '胸口温暖柔软，眼眶可能有点湿，身体放松。',
+      inner: '脑子里在回想具体的人和具体的事，"还好当时有他/她"。',
+      behavior: '对人变得更柔软、想表达谢意、愿意主动给予、愿意多说一些。',
+      need: '把这份感谢说出口、具体地说，不要只放在心里。'
+    }
+  },
+  {
+    id: 'expectant', emoji: '🌱', name: '期待', desc: '充满希望、适合规划未来',
+    color: '#7ec97a', bg: '#7ec97a1f',
+    feeling: {
+      body: '身体轻盈、前倾、跃跃欲试。呼吸轻快。',
+      inner: '脑子里在画未来的画面，"如果真能做成……"，带着希望的想象。',
+      behavior: '愿意做规划、主动谈未来、投入度高、愿意为长期目标花时间。',
+      need: '有人一起共创、一起相信这件事。'
+    }
+  },
+  {
+    id: 'focused', emoji: '🎯', name: '专注', desc: '思路清晰、适合解决问题',
+    color: '#6b8fc9', bg: '#6b8fc91f',
+    feeling: {
+      body: '很安静但神经紧绷，呼吸深长，肩颈可能发紧。对外界声音不敏感。',
+      inner: '一件事在脑子里反复运转，其他事都像被调小了音量。',
+      behavior: '话变少、效率高、不想被闲聊打断。回消息也变短。',
+      need: '有连续的时间、安静的环境，别人不要在此时来社交。'
+    }
+  },
+  {
+    id: 'curious', emoji: '🧐', name: '好奇', desc: '想要探究、适合提问倾听',
+    color: '#9b7ec9', bg: '#9b7ec91f',
+    feeling: {
+      body: '眼神发亮、身体前倾、愿意把耳朵凑近。',
+      inner: '"为什么是这样？""还有别的可能吗？"心里有好多小问号。',
+      behavior: '追问、查资料、愿意听完全不同的视角、不急着下结论。',
+      need: '给自己空间去探索，不必立刻得出一个答案。'
+    }
+  },
+  {
+    id: 'conflicted', emoji: '🤔', name: '矛盾', desc: '内心纠结、需先理清思路',
+    color: '#7e8ac9', bg: '#7e8ac91f',
+    feeling: {
+      body: '微微紧、容易叹气、坐姿频繁变换、手会无意识动。',
+      inner: '"A 也对、B 也对"，脑子里有两个声音在辩论，谁也说服不了谁。',
+      behavior: '容易犹豫、反复权衡、不愿拍板、会一直想同一件事。',
+      need: '把两边的想法分别写下来、看看各自背后的价值观，再做决定。'
+    }
+  },
+  {
+    id: 'tired', emoji: '😮‍💨', name: '疲惫', desc: '能量低、注意控制时长',
+    color: '#8a7e9b', bg: '#8a7e9b1f',
+    feeling: {
+      body: '眼睛酸、肩膀沉、反应慢半拍。身体像被调到了省电模式。',
+      inner: '"只想快点结束、回家""别再有新事了"。思路不如平时敏捷。',
+      behavior: '回复简短、处理事情容易不够细致、对琐碎容易烦。',
+      need: '休息。此刻不适合做高强度决策或有情绪的沟通。'
+    }
+  },
+  {
+    id: 'anxious', emoji: '😟', name: '焦虑', desc: '紧张不安、易传递压力',
+    color: '#c9a66b', bg: '#c9a66b1f',
+    feeling: {
+      body: '心跳偏快、呼吸浅而短、肩膀耸起、胃部发紧、坐立不安。',
+      inner: '脑子里反复过"万一……怎么办"，想象各种坏结果。',
+      behavior: '容易打断别人、反复确认、难以聚焦、说话可能语速变快。',
+      need: '先回到当下（深呼吸、看看周围），把担心一条条写出来、逐项看。'
+    }
+  },
+  {
+    id: 'stressed', emoji: '😣', name: '压力大', desc: '负重前行、注意情绪溢出',
+    color: '#c98a6b', bg: '#c98a6b1f',
+    feeling: {
+      body: '全身紧绷、头紧、睡眠变浅、下颌紧咬。',
+      inner: '"事情太多了、根本来不及""怎么办怎么办"。',
+      behavior: '易烦躁、容易冲身边的人发火、反而难以开始任何一件任务。',
+      need: '先分解任务、划掉能不做的、给自己留一小段留白时间。'
+    }
+  },
+  {
+    id: 'frustrated', emoji: '😤', name: '受挫', desc: '遇到阻力、易急躁',
+    color: '#d47b6b', bg: '#d47b6b1f',
+    feeling: {
+      body: '胸口堵、呼吸变粗、牙关紧、手可能在不停动。',
+      inner: '"为什么又这样？""我已经尽力了""这不合理"。',
+      behavior: '容易翻旧账、语气变硬、想放弃或想用力一搏，情绪有波动。',
+      need: '先承认"我确实努力过、这真的很难"，再讨论接下来做什么。'
+    }
+  },
+  {
+    id: 'angry', emoji: '😠', name: '愤怒', desc: '强烈不满、需先冷静',
+    color: '#c96b6b', bg: '#c96b6b1f',
+    feeling: {
+      body: '脸发热、心跳快、拳头握紧、呼吸粗重、胸口有东西顶着。',
+      inner: '"这不公平""我不接受""必须有人为这个负责"。',
+      behavior: '容易说重话、想立刻对抗、难以倾听对方、容易升级冲突。',
+      need: '先离开现场冷静至少 20 分钟。不在这个状态下做任何决策或沟通。'
+    }
+  },
+  {
+    id: 'down', emoji: '😔', name: '低落', desc: '心情沉重、易显被动',
+    color: '#6b7e9e', bg: '#6b7e9e1f',
+    feeling: {
+      body: '身体沉重、动作变慢、肩膀缩着、说话声音小。',
+      inner: '"好像没什么是值得做的""什么都提不起劲"。对未来画面模糊。',
+      behavior: '被动回应、能量低、话少、对邀请容易说不。',
+      need: '被理解、被允许就这样待一会儿，不被催促"打起精神"。'
+    }
+  },
+  {
+    id: 'wronged', emoji: '🥺', name: '委屈', desc: '觉得不被理解、需先安顿',
+    color: '#b48ac9', bg: '#b48ac91f',
+    feeling: {
+      body: '眼眶湿、胸口闷、喉咙发紧、说话容易卡住。',
+      inner: '"我不是这个意思""没人理解我""我也是为了大家好"。',
+      behavior: '容易沉默不语、也可能突然激动反驳、可能会哭、很敏感。',
+      need: '先被看见、被承认"你的感受是真的"，然后再讨论事实。'
+    }
+  },
+  {
+    id: 'numb', emoji: '😐', name: '麻木', desc: '情绪低迷、需重启注意力',
+    color: '#8a857e', bg: '#8a857e1f',
+    feeling: {
+      body: '身体脱力、动作机械、面部表情少。像是在"自动驾驶"。',
+      inner: '"无所谓""都可以""随便吧"。对喜欢的事也提不起劲。',
+      behavior: '按流程做事但没心流、失去偏好、对人对事都淡淡的。',
+      need: '先去好好休息，然后找一件能让你有一点小感受的事重启自己。'
+    }
+  }
+];
+
+let selectedEmotion = null;
+let emotionHistory = loadData('yuki_emotion_history', []);
+
+function renderEmotionGrid() {
+  const grid = document.getElementById('emotionGrid');
+  if (!grid) return;
+  grid.innerHTML = emotions.map(e => `
+    <div class="emotion-card" id="emotion-${e.id}" onclick="selectEmotion('${e.id}')" style="--emotion-color:${e.color};--emotion-bg:${e.bg};">
+      <div class="emotion-emoji">${e.emoji}</div>
+      <div class="emotion-name">${e.name}</div>
+      <div class="emotion-desc">${e.desc}</div>
+    </div>
+  `).join('');
+}
+
+function selectEmotion(id) {
+  selectedEmotion = id;
+  const emotion = emotions.find(e => e.id === id);
+  if (!emotion) return;
+
+  document.querySelectorAll('.emotion-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`emotion-${id}`).classList.add('selected');
+
+  const bar = document.getElementById('emotionSelectedBar');
+  bar.style.display = 'block';
+  bar.style.setProperty('--emotion-color', emotion.color);
+  bar.innerHTML = `
+    <div class="emotion-detail-header">
+      <div class="ed-emoji">${emotion.emoji}</div>
+      <div style="flex:1;">
+        <div class="ed-name">${emotion.name}</div>
+        <div class="ed-desc">${emotion.desc}</div>
+      </div>
+      <button class="btn btn-sm" onclick="clearEmotion()">✕ 重选</button>
+    </div>
+
+    <div class="emotion-detail-intro">
+      <span style="color:${emotion.color};">✦</span> 你现在感受到的可能是这样的：
+    </div>
+
+    <div class="emotion-detail-grid">
+      <div class="edg-item">
+        <div class="edg-label" style="color:${emotion.color};">💓 身体信号</div>
+        <div class="edg-text">${emotion.feeling.body}</div>
+      </div>
+      <div class="edg-item">
+        <div class="edg-label" style="color:${emotion.color};">💭 内心独白</div>
+        <div class="edg-text">${emotion.feeling.inner}</div>
+      </div>
+      <div class="edg-item">
+        <div class="edg-label" style="color:${emotion.color};">🎬 容易做的事</div>
+        <div class="edg-text">${emotion.feeling.behavior}</div>
+      </div>
+      <div class="edg-item">
+        <div class="edg-label" style="color:${emotion.color};">🎯 此刻你需要的</div>
+        <div class="edg-text">${emotion.feeling.need}</div>
+      </div>
+    </div>
+
+    <div class="emotion-detail-check">
+      <span>👉 感觉不太对？</span>
+      <button class="btn btn-sm" onclick="clearEmotion();document.getElementById('emotionGrid').scrollIntoView({behavior:'smooth',block:'start'});">回到卡牌重选</button>
+      <span style="color:var(--text-muted);font-size:12px;margin-left:6px;">情绪有时会有好几层，选最主导的那一个就好。</span>
+    </div>
+  `;
+}
+
+function clearEmotion() {
+  selectedEmotion = null;
+  document.querySelectorAll('.emotion-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('emotionSelectedBar').style.display = 'none';
+}
+
+async function getConversationAdvice() {
+  if (!selectedEmotion) { showToast('请先选择当前情绪'); return; }
+  const emotion = emotions.find(e => e.id === selectedEmotion);
+  const context = document.getElementById('emotionContext').value.trim();
+
+  // Save history
+  emotionHistory.unshift({
+    time: new Date().toLocaleString('zh-CN'),
+    emotion: emotion.name,
+    emoji: emotion.emoji,
+    context: context.slice(0, 60)
+  });
+  if (emotionHistory.length > 30) emotionHistory.length = 30;
+  saveData('yuki_emotion_history', emotionHistory);
+  renderEmotionHistory();
+
+  const output = document.getElementById('emotionAdvice');
+  const btn = document.getElementById('emotionAdviceBtn');
+  output.innerHTML = '<div class="spinner"></div>';
+  btn.disabled = true;
+  btn.textContent = '⏳ 生成中...';
+
+  try {
+    const prompt = `你是一位资深的员工沟通顾问，擅长帮助管理者在不同情绪状态下完成有效的一对一谈话。
+
+【当前我的情绪】
+${emotion.emoji} ${emotion.name}（${emotion.desc}）
+
+${context ? '【本次谈话背景】\n' + context : '【本次谈话背景】未提供，请给出通用的员工谈话建议'}
+
+请基于我当前的情绪状态，给出一份谈话指导，按以下结构输出：
+
+1. 【自我觉察】当前这种情绪可能对本次沟通产生哪些正面/负面影响（2-3句话，一针见血）
+
+2. 【沟通策略】适合此状态下的沟通策略（3-4条具体建议，每条说明"做什么 + 为什么"）
+
+3. 【避免雷区】此情绪状态下最容易踩的坑（3条，要具体到行为，例如"避免使用'你应该'句式"）
+
+4. 【开场白参考】给出 3 条可以直接使用的开场白，要符合当前情绪、自然不做作
+
+5. 【情绪调节】如果当前情绪不利于谈话，给出 2-3 个 2 分钟内可执行的快速调节方法
+
+请用清晰的格式输出，实用、具体、可直接套用。不要使用 markdown 的 # 号标题，用【】或数字列表即可。`;
+
+    const text = await callAI(prompt, 1800);
+    output.innerHTML = '';
+    output.textContent = text;
+  } catch (err) {
+    output.innerHTML = '';
+    output.textContent = err.message;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✨ 生成谈话建议';
+}
+
+function renderEmotionHistory() {
+  const container = document.getElementById('emotionHistory');
+  if (!container) return;
+  if (emotionHistory.length === 0) {
+    container.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:8px;">暂无情绪记录</div>';
+    return;
+  }
+  container.innerHTML = emotionHistory.slice(0, 15).map(h => `
+    <div class="emotion-history-item" title="${h.context || ''}">
+      <span>${h.emoji}</span>
+      <span>${h.emotion}</span>
+      <span style="color:var(--text-muted);font-size:11px;">· ${h.time.split(' ')[0].slice(5)}</span>
+    </div>
+  `).join('');
+}
+
+function copyEmotionAdvice() {
+  const text = document.getElementById('emotionAdvice').textContent;
+  if (text && !text.includes('选择情绪卡牌')) {
+    navigator.clipboard.writeText(text);
+    showToast('谈话建议已复制 ✓');
+  }
+}
+
+// ============================================================
+// MODULE 8: ENNEAGRAM
+// ============================================================
+const enneagramTypes = [
+  {
+    num: 1, name: '完美主义者', subtitle: 'The Reformer',
+    color: '#c97b6b', bg: '#c97b6b14',
+    motivation: '追求完美与正确，希望让自己和世界变得更好。内在有一个严厉的"内在批评家"。',
+    traits: ['自律', '理性', '高标准', '有原则', '负责任', '批判性强', '细节控'],
+    preference: '喜欢逻辑清晰、有条理、基于事实的沟通。重视质量、细节、规则和"做对"。讨厌模糊和草率。',
+    landmines: '草率结论 / 错误信息 / 不负责任的态度 / 被指责"不够好" / 无视既定流程',
+    bestApproach: '提供具体事实和数据，先肯定 ta 的高标准。用"我们一起把这个做得更好"的视角，而不是"你哪里错了"。给出明确步骤和合理预期。批评要私下、就事论事，避免否定 ta 的整体努力。'
+  },
+  {
+    num: 2, name: '助人者', subtitle: 'The Helper',
+    color: '#c97b9b', bg: '#c97b9b14',
+    motivation: '希望被需要、被爱、被欣赏。通过帮助他人来确认自己的价值。',
+    traits: ['热情', '关怀', '慷慨', '敏感', '人际取向', '善解人意', '怕被冷落'],
+    preference: '喜欢温暖、有人情味、关注关系的交流。在意"我对你重要吗"。情感表达直接而频繁。',
+    landmines: '冷漠对待 / 忽视 ta 的付出 / 公事公办的距离感 / 让 ta 觉得自己"没用"',
+    bestApproach: '先表达感谢和认可，再谈具体事情。用"我需要你的帮助"或"你对团队很重要"作为切入。给反馈时夹在两层肯定中间。直接说"谢谢你"比说十句"做得好"更有效。'
+  },
+  {
+    num: 3, name: '成就者', subtitle: 'The Achiever',
+    color: '#c9b46b', bg: '#c9b46b14',
+    motivation: '追求成功、效率、被认可。通过"成就"来确认自我价值，非常注重外在形象。',
+    traits: ['目标导向', '高效率', '自信', '务实', '注重形象', '竞争意识', '不喜失败'],
+    preference: '喜欢直接、聚焦目标、节奏快的沟通。讨厌浪费时间。喜欢被看见的认可，尤其是公开的。',
+    landmines: '冗长闲聊 / 过程不清晰 / 公开场合的负面反馈 / 让 ta 显得失败 / 被忽视成就',
+    bestApproach: '开门见山讲目标和KPI，用"这能帮你拿到 X 结果"打动 ta。会议要有议程、有结论。批评私下进行，给出"你完全有能力做得更好"的台阶。公开场合多点名表扬。'
+  },
+  {
+    num: 4, name: '个人主义者', subtitle: 'The Individualist',
+    color: '#9b7ec9', bg: '#9b7ec914',
+    motivation: '寻找独特的自我和深层意义，害怕被认为"普通"或"被误解"。',
+    traits: ['感性', '有创造力', '深度', '情绪化', '审美强', '渴望共鸣', '怕被同质化'],
+    preference: '喜欢真诚、有深度、有情感浓度的对话。重视独特性、被理解、被看见"真实的自己"。',
+    landmines: '"大家都这样" / 流程化对待 / 浅层表扬 / 否定 ta 的感受 / 用模板话术',
+    bestApproach: '花时间倾听 ta 的感受和想法，承认 ta 的独特视角。用"你看到的角度很特别"这类语言。批评要包裹在真诚的关心里，避免"normalize"对方的情绪。给 ta 表达创意的空间。'
+  },
+  {
+    num: 5, name: '思考者', subtitle: 'The Investigator',
+    color: '#6b8fc9', bg: '#6b8fc914',
+    motivation: '通过知识和理解来获得安全感，珍视独立和私人空间。',
+    traits: ['内向', '独立', '分析力强', '节制', '理性', '保护边界', '需要独处'],
+    preference: '喜欢理性、有数据、给出空间和时间的沟通。讨厌情感勒索和过度社交。文字沟通常常优于口头。',
+    landmines: '突然打扰 / 情绪化诉求 / 强迫表态 / 闲聊和寒暄 / 侵犯私人时间',
+    bestApproach: '提前预约时间，明确告知谈话主题让 ta 有时间准备。用书面材料先沟通。问题要具体、有边界。给 ta 思考时间，沉默不代表抗拒。少谈感受，多谈逻辑和事实。'
+  },
+  {
+    num: 6, name: '怀疑论者', subtitle: 'The Loyalist',
+    color: '#7e8ac9', bg: '#7e8ac914',
+    motivation: '寻求安全感和归属，对潜在风险高度警觉，需要"可信赖"的环境。',
+    traits: ['谨慎', '忠诚', '可靠', '警觉', '负责任', '怀疑权威', '需要确定性'],
+    preference: '喜欢清晰、可预测、信息透明的沟通。会反复确认，需要逻辑闭环。建立信任需要时间，但一旦信任极稳定。',
+    landmines: '突然变化 / 信息不透明 / 模糊承诺 / 被背叛信任 / 让 ta "猜你想干嘛"',
+    bestApproach: '把所有信息摊开讲，包括风险和不确定性。明确说"我们的计划是 A，如果出现 X 就走 B"。耐心回答 ta 的"假如…怎么办"。承诺要做到，做不到要提前说。一旦建立信任，ta 是最忠诚的伙伴。'
+  },
+  {
+    num: 7, name: '享乐主义者', subtitle: 'The Enthusiast',
+    color: '#d4a574', bg: '#d4a57414',
+    motivation: '追求快乐、新鲜感、可能性，回避痛苦和限制。',
+    traits: ['乐观', '活泼', '好奇', '多才多艺', '怕被困住', '善变', '思维跳跃'],
+    preference: '喜欢轻松、有趣、有变化、节奏快的沟通。讨厌负面话题被反复咀嚼。喜欢"未来"和"可能性"的语言。',
+    landmines: '反复纠缠负面 / 限制选择 / 长时间单调会议 / "你必须" / 让 ta 觉得无聊',
+    bestApproach: '用积极框架包装难题（"这是个有趣的挑战"）。讨论要有节奏感，避免冗长。给 ta 多个选项而不是单选。让批评尽快过去，并给一个新的方向作为出口。利用 ta 的热情，但要明确截止时间。'
+  },
+  {
+    num: 8, name: '挑战者', subtitle: 'The Challenger',
+    color: '#a95757', bg: '#a9575714',
+    motivation: '追求掌控感和力量，保护自己和"自己人"，不愿被任何人控制。',
+    traits: ['果断', '强势', '坦率', '有保护欲', '行动派', '直接', '不怕冲突'],
+    preference: '喜欢直接、坦诚、有力量的沟通。讨厌绕弯子、虚伪、软弱。看重谁是"真材实料"。',
+    landmines: '拐弯抹角 / 显得软弱无力 / 被欺骗 / 当众被驳斥 / 用规则压 ta',
+    bestApproach: '直接说要点，不要铺垫太长。和 ta 讨论时要"站得住"，被挑战时不退缩、就事论事。承认 ta 的力量和直觉。一旦 ta 把你当"自己人"，会非常护着你。给 ta 自主权和决策空间。'
+  },
+  {
+    num: 9, name: '和平主义者', subtitle: 'The Peacemaker',
+    color: '#7a9e7e', bg: '#7a9e7e14',
+    motivation: '追求内心的平和与外部的和谐，回避冲突，常常忽视自己的需求。',
+    traits: ['随和', '包容', '稳定', '调和', '怕冲突', '拖延倾向', '好相处'],
+    preference: '喜欢温和、不施压、给时间思考的沟通。讨厌被催促和被强迫表态。会用"还行""可以"来回避真实想法。',
+    landmines: '高压逼问 / 强迫立刻决定 / 直接冲突 / 忽视 ta 的存在感 / 多线程任务',
+    bestApproach: '用温和的方式提出问题，给充分的反应时间。多问"你真正想要的是什么"，不要被表面的"可以"骗到。一次只推一件事，避免任务堆叠。明确具体的小步骤而不是宏大目标。表达对 ta 的重视。'
+  }
+];
+
+let selectedEnneagramType = null;
+
+function renderEnneagramGrid() {
+  const grid = document.getElementById('enneagramGrid');
+  if (!grid) return;
+  grid.innerHTML = enneagramTypes.map(t => `
+    <div class="enneagram-card" id="ennea-${t.num}" onclick="selectEnneagram(${t.num})" style="--ennea-color:${t.color};--ennea-bg:${t.bg};">
+      <div class="ennea-number" style="color:${t.color};">${t.num}</div>
+      <div class="ennea-title">${t.name}</div>
+      <div class="ennea-subtitle">${t.subtitle}</div>
+    </div>
+  `).join('');
+}
+
+function selectEnneagram(num) {
+  selectedEnneagramType = num;
+  const type = enneagramTypes.find(t => t.num === num);
+  if (!type) return;
+
+  document.querySelectorAll('.enneagram-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`ennea-${num}`).classList.add('selected');
+
+  const detail = document.getElementById('enneaDetail');
+  detail.style.display = 'block';
+  detail.style.setProperty('--ennea-color', type.color);
+  detail.innerHTML = `
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+      <div class="ennea-number" style="color:${type.color};font-size:42px;">${type.num}</div>
+      <div>
+        <div style="font-family:'Noto Serif SC',serif;font-size:20px;font-weight:600;">${type.name}</div>
+        <div style="font-size:12px;color:var(--text-muted);font-family:'Space Mono',monospace;letter-spacing:1px;margin-top:2px;">${type.subtitle.toUpperCase()}</div>
+      </div>
+    </div>
+
+    <div class="ennea-detail-section">
+      <div class="ennea-detail-label" style="color:${type.color};">核心动机</div>
+      <div class="ennea-detail-content">${type.motivation}</div>
+    </div>
+
+    <div class="ennea-detail-section">
+      <div class="ennea-detail-label" style="color:${type.color};">关键特质</div>
+      <div class="ennea-tags">
+        ${type.traits.map(t => `<span class="ennea-tag">${t}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="ennea-detail-section">
+      <div class="ennea-detail-label" style="color:${type.color};">沟通偏好</div>
+      <div class="ennea-detail-content">${type.preference}</div>
+    </div>
+
+    <div class="ennea-detail-section">
+      <div class="ennea-detail-label" style="color:${type.color};">⚠️ 雷区/敏感点</div>
+      <div class="ennea-detail-content">${type.landmines}</div>
+    </div>
+
+    <div class="ennea-detail-section">
+      <div class="ennea-detail-label" style="color:${type.color};">✓ 最佳沟通方式</div>
+      <div class="ennea-detail-content">${type.bestApproach}</div>
+    </div>
+  `;
+
+  document.getElementById('chatAnalyzerSection').style.display = 'block';
+  document.getElementById('enneagramEmptyTip').style.display = 'none';
+}
+
+async function analyzeChatMessage() {
+  if (!selectedEnneagramType) { showToast('请先选择对方的人格类型'); return; }
+  const chatContent = document.getElementById('chatContent').value.trim();
+  if (!chatContent) { showToast('请输入对方的聊天内容'); return; }
+
+  const myContext = document.getElementById('chatMyContext').value.trim();
+  const type = enneagramTypes.find(t => t.num === selectedEnneagramType);
+
+  const output = document.getElementById('analyzerOutput');
+  const btn = document.getElementById('analyzeBtn');
+  output.innerHTML = '<div class="spinner"></div>';
+  btn.disabled = true;
+  btn.textContent = '⏳ 分析中...';
+
+  try {
+    const prompt = `你是一位精通九型人格学和职场沟通心理学的资深顾问。
+
+【对方的人格类型】
+${type.num}号 — ${type.name}（${type.subtitle}）
+- 核心动机：${type.motivation}
+- 关键特质：${type.traits.join('、')}
+- 沟通偏好：${type.preference}
+- 雷区：${type.landmines}
+- 最佳沟通方式：${type.bestApproach}
+
+【对方的聊天内容】
+${chatContent}
+
+${myContext ? '【我的背景 / 想达成的目的】\n' + myContext : ''}
+
+请基于九型人格视角，给出以下分析（每部分都要具体、有例子，避免空话）：
+
+1. 【字面意思 vs 真实想法】
+   - 表面在说什么
+   - 结合${type.num}号的特点，潜台词或真正想表达的可能是什么
+   - 重点关注 ta 没说出口、但对${type.num}号来说很重要的部分
+
+2. 【情绪状态判断】
+   - 当前情绪（平静/防御/试探/受挫/期待/不满 等）
+   - 背后的心理需求（被认可/被理解/想确认安全/想要掌控感 等）
+
+3. 【回复策略】
+   ✅ DO（应该做的，3条具体建议）
+   ❌ DON'T（容易踩雷的回应方式，3条）
+
+4. 【建议回复样本】
+   提供 2-3 个不同语气/角度的回复模板，让我可以直接选用或修改：
+   - 版本A（偏 XX 风格）："..."
+   - 版本B（偏 XX 风格）："..."
+
+请用清晰的结构化格式输出，实用、具体、可直接套用。不要使用 markdown 的 # 号标题，直接用【】或数字列表即可。`;
+
+    const text = await callAI(prompt, 2200);
+    output.innerHTML = '';
+    output.textContent = text;
+  } catch (err) {
+    output.innerHTML = '';
+    output.textContent = err.message;
+  }
+
+  btn.disabled = false;
+  btn.textContent = '🔍 解读 & 给出回复建议';
+}
+
+function reanalyze() { analyzeChatMessage(); }
+
+function copyAnalysis() {
+  const text = document.getElementById('analyzerOutput').textContent;
+  if (text && !text.includes('先选择对方的人格类型')) {
+    navigator.clipboard.writeText(text);
+    showToast('分析结果已复制 ✓');
+  }
+}
+
+// ============================================================
+// MODULE 9: MARKETING 8 MODULES + SOCRATIC COACH
+// ============================================================
+const marketingModules = [
+  {
+    num: 1, emoji: '🔍', name: '市场分析', subtitle: 'Market Analysis',
+    color: '#6b8fc9', bg: '#6b8fc914',
+    question: '我们所处的是一个什么样的市场？它在往哪里走？',
+    what: '理解行业的宏观环境、市场规模、增长趋势、关键驱动力和风险，回答"这个池子值不值得游"。',
+    frameworks: ['PESTEL 分析', 'TAM-SAM-SOM 市场规模', '行业生命周期', '波士顿矩阵'],
+    dimensions: '政策环境 · 经济周期 · 社会趋势 · 技术变革 · 市场容量 · 增长率 · 进入壁垒',
+    trap: '只看局部数据而忽略宏观趋势、把去年数据当今年用、不考虑替代品'
+  },
+  {
+    num: 2, emoji: '👥', name: '消费者洞察', subtitle: 'Consumer Insight',
+    color: '#c97b9b', bg: '#c97b9b14',
+    question: '我们的用户到底是谁？他们为什么买、在什么场景下买？',
+    what: '穿透人口统计数据，看到用户真实的动机、痛点、决策路径，回答"用户为什么选我/不选我"。',
+    frameworks: ['JTBD（Jobs To Be Done）', '用户画像 Persona', '用户旅程地图', '5W2H'],
+    dimensions: '动机 · 场景 · 痛点 · 决策链路 · 信息来源 · 使用行为 · 情感价值',
+    trap: '只列"人口统计学"标签（年龄/性别）却不知道 ta 真实动机、把自己当成用户、用户嘴上说的当真实需求'
+  },
+  {
+    num: 3, emoji: '⚔️', name: '竞争分析', subtitle: 'Competitive Analysis',
+    color: '#c97b6b', bg: '#c97b6b14',
+    question: '我们和竞争对手的真正区别在哪？用户为什么非选我们不可？',
+    what: '识别直接/间接/替代竞品，剖析各自优势、找到属于自己的差异化立足点，回答"凭什么是我们"。',
+    frameworks: ['SWOT 分析', '波特五力模型', '竞品矩阵图', '蓝海战略'],
+    dimensions: '直接竞品 · 替代方案 · 优势对比 · 劣势补短 · 差异化机会 · 壁垒构建',
+    trap: '只盯着直接竞品忽略替代品、把自己的优势自动当成用户在意的、一味价格战'
+  },
+  {
+    num: 4, emoji: '🎯', name: 'STP 定位', subtitle: 'Segmentation · Targeting · Positioning',
+    color: '#c9b46b', bg: '#c9b46b14',
+    question: '我们选择服务谁？在他们心智中我们代表什么？',
+    what: '在市场中切出最有价值的细分、明确主攻人群、在他们心智中占据一个清晰的位置。',
+    frameworks: ['Segmentation-Targeting-Positioning', '定位屋模型', '感知地图', 'Jobs-Competitor-Different'],
+    dimensions: '细分依据 · 目标优先级 · 核心价值主张 · 心智位置 · 区隔竞品 · 用户一句话记住你',
+    trap: '想服务所有人 = 服务不了任何人、定位和竞品差不多、自我感觉 vs 用户感知错位'
+  },
+  {
+    num: 5, emoji: '🏛️', name: '品牌策略', subtitle: 'Brand Strategy',
+    color: '#9b7ec9', bg: '#9b7ec914',
+    question: '我们是谁？我们代表什么？用户和我们之间的情感契约是什么？',
+    what: '构建品牌的核心信仰、调性、价值主张和视觉/语言系统，让品牌成为一种心智资产。',
+    frameworks: ['品牌金字塔', 'Keller 品牌资产模型', 'Brand Archetype（12 种原型）', '品牌故事 Narrative'],
+    dimensions: '品牌使命 · 核心价值 · 调性 · 人格 · 故事 · 符号系统 · 一致性',
+    trap: '品牌 = Logo 和视觉（大错特错）、说一套做一套、用户感知和自我期望脱节、品牌和产品割裂'
+  },
+  {
+    num: 6, emoji: '📦', name: '产品/服务策略', subtitle: 'Product & Service',
+    color: '#7a9e7e', bg: '#7a9e7e14',
+    question: '我们提供的价值具体是什么？核心卖点、组合、体验如何设计？',
+    what: '从功能、体验、组合、生命周期等维度设计产品/服务，让它真正承接品牌承诺。',
+    frameworks: ['产品生命周期', '卖点梯度（功能-利益-价值）', '服务蓝图', '产品组合矩阵'],
+    dimensions: '核心功能 · 差异化卖点 · 体验设计 · 产品矩阵 · 服务流程 · 迭代节奏 · 价格体系',
+    trap: '功能堆砌、自嗨式创新、产品和定位脱节、忽视服务体验、价格没有战略锚点'
+  },
+  {
+    num: 7, emoji: '📣', name: '营销传播', subtitle: 'Marketing Communication',
+    color: '#d4a574', bg: '#d4a57414',
+    question: '怎样让目标用户听到、相信、并采取行动？',
+    what: '设计触达目标人群的渠道组合、信息策略、内容资产和转化路径，实现"被看见-被记住-被选择"。',
+    frameworks: ['IMC 整合营销传播', 'AIDA 模型', '4A 模型', '内容金字塔', '媒介组合'],
+    dimensions: '渠道选择 · 信息策略 · 创意内容 · 媒介组合 · 触点设计 · 转化漏斗 · 声量节奏',
+    trap: '什么渠道都想做（都做不好）、内容同质化、忽视品牌一致性、只看曝光不看转化、无节奏乱打'
+  },
+  {
+    num: 8, emoji: '📈', name: '效果评估', subtitle: 'Performance Measurement',
+    color: '#7a9e9e', bg: '#7a9e9e14',
+    question: '什么叫成功？我们在看对的指标吗？下一步怎么优化？',
+    what: '建立衡量体系、识别关键指标、做归因分析，把营销从"感觉"变成"可管理的系统"。',
+    frameworks: ['OKR · 北极星指标', '营销漏斗 AARRR', 'ROI / ROAS', '归因模型', 'A/B 测试'],
+    dimensions: '北极星指标 · 过程指标 · 结果指标 · 漏斗转化 · 归因路径 · 复盘节奏 · 迭代闭环',
+    trap: '盯虚荣指标（曝光/粉丝）、没有北极星、不做归因、结果归因变成"比去年涨了"、不复盘'
+  }
+];
+
+let selectedMarketingModule = null;
+// Marketing chat state (persists in localStorage)
+let marketingChatHistory = loadData('yuki_marketing_chat', []);
+
+function renderMarketingGrid() {
+  const grid = document.getElementById('marketingGrid');
+  if (!grid) return;
+  grid.innerHTML = marketingModules.map(m => `
+    <div class="marketing-card" id="mkt-${m.num}" onclick="selectMarketingModule(${m.num})" style="--mkt-color:${m.color};--mkt-bg:${m.bg};">
+      <div class="mkt-card-top">
+        <div class="mkt-emoji">${m.emoji}</div>
+        <div style="flex:1;">
+          <div class="mkt-number" style="color:${m.color};">MODULE · ${String(m.num).padStart(2, '0')}</div>
+          <div class="mkt-name">${m.name}</div>
+          <div class="mkt-sub">${m.subtitle}</div>
+        </div>
+      </div>
+      <div class="mkt-question">${m.question}</div>
+    </div>
+  `).join('');
+}
+
+function selectMarketingModule(num) {
+  selectedMarketingModule = num;
+  const m = marketingModules.find(x => x.num === num);
+  if (!m) return;
+
+  document.querySelectorAll('.marketing-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById(`mkt-${num}`).classList.add('selected');
+
+  const detail = document.getElementById('marketingDetail');
+  detail.style.display = 'block';
+  detail.style.setProperty('--mkt-color', m.color);
+  detail.innerHTML = `
+    <div class="mkt-detail-header">
+      <div class="mdh-num" style="color:${m.color};">${m.emoji}</div>
+      <div>
+        <div class="mdh-title">Module ${m.num}｜${m.name}</div>
+        <div class="mdh-sub">${m.subtitle.toUpperCase()}</div>
+      </div>
+    </div>
+
+    <div class="mkt-detail-section">
+      <div class="mkt-detail-label" style="color:${m.color};">核心问题</div>
+      <div class="mkt-detail-content" style="font-style:italic;">"${m.question}"</div>
+    </div>
+
+    <div class="mkt-detail-section">
+      <div class="mkt-detail-label" style="color:${m.color};">这个模块在解决什么</div>
+      <div class="mkt-detail-content">${m.what}</div>
+    </div>
+
+    <div class="mkt-detail-section">
+      <div class="mkt-detail-label" style="color:${m.color};">常用框架 / 工具</div>
+      <div class="ennea-tags">
+        ${m.frameworks.map(f => `<span class="ennea-tag">${f}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="mkt-detail-section">
+      <div class="mkt-detail-label" style="color:${m.color};">思考维度</div>
+      <div class="mkt-detail-content" style="color:var(--text-secondary);">${m.dimensions}</div>
+    </div>
+
+    <div class="mkt-detail-section">
+      <div class="mkt-detail-label" style="color:${m.color};">⚠️ 容易踩的坑</div>
+      <div class="mkt-detail-content" style="color:var(--text-secondary);">${m.trap}</div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+      <button class="btn btn-primary btn-sm" onclick="askCoachAboutModule(${m.num})">💬 就这个模块向教练提问</button>
+    </div>
+  `;
+}
+
+function askCoachAboutModule(num) {
+  const m = marketingModules.find(x => x.num === num);
+  const input = document.getElementById('marketingChatInput');
+  input.value = `我想聊聊【${m.name}】这个模块，我现在的困惑是：`;
+  input.focus();
+  // Scroll to chat
+  document.querySelector('.chat-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function useChatSuggestion(el) {
+  const text = el.textContent.trim();
+  const input = document.getElementById('marketingChatInput');
+  input.value = text;
+  input.focus();
+}
+
+function renderMarketingChat() {
+  const container = document.getElementById('marketingChatMessages');
+  if (!container) return;
+  if (marketingChatHistory.length === 0) {
+    container.innerHTML = `
+      <div class="chat-empty-hint">
+        还没有对话 · 把你的营销/品牌困惑抛过来吧，或点击上方建议开始<br>
+        <span style="font-size:11px;">教练只会问问题、不会给答案，答案要从你的具体情境里长出来</span>
+      </div>`;
+    return;
+  }
+  container.innerHTML = marketingChatHistory.map(msg => {
+    if (msg.role === 'user') {
+      return `<div class="chat-bubble user">${escapeHtml(msg.content)}</div>`;
+    } else {
+      return `<div class="chat-bubble coach"><div class="coach-label">🎓 教练</div>${escapeHtml(msg.content)}</div>`;
+    }
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, s => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[s]));
+}
+
+async function sendMarketingChat() {
+  const input = document.getElementById('marketingChatInput');
+  const userMsg = input.value.trim();
+  if (!userMsg) return;
+
+  const btn = document.getElementById('marketingSendBtn');
+  const container = document.getElementById('marketingChatMessages');
+
+  // Push user message
+  marketingChatHistory.push({ role: 'user', content: userMsg });
+  renderMarketingChat();
+  input.value = '';
+
+  // Show loading bubble
+  const loadingEl = document.createElement('div');
+  loadingEl.className = 'chat-bubble coach loading';
+  loadingEl.innerHTML = `<span>教练正在思考你的问题</span><div class="typing-dots"><span></span><span></span><span></span></div>`;
+  container.appendChild(loadingEl);
+  container.scrollTop = container.scrollHeight;
+
+  btn.disabled = true;
+  btn.textContent = '思考中...';
+
+  try {
+    // Build conversation context
+    const systemRules = `你是一位资深市场营销教练，风格类似苏格拉底——通过提问来启发思考，而不是给答案。你的任务是帮对方自己想清楚，而不是帮他/她想。
+
+【你的知识框架：市场营销八大模块】
+1. 市场分析（行业趋势、市场规模、PESTEL、TAM-SAM-SOM）
+2. 消费者洞察（用户画像、JTBD、旅程、动机痛点）
+3. 竞争分析（SWOT、波特五力、差异化、替代品）
+4. STP 定位（细分、目标、定位屋、心智位置）
+5. 品牌策略（品牌金字塔、Keller 资产模型、原型 Archetype、价值主张）
+6. 产品/服务（生命周期、卖点梯度、服务蓝图、产品组合）
+7. 营销传播（IMC、AIDA、4A、渠道组合、内容金字塔）
+8. 效果评估（北极星、漏斗 AARRR、ROI/ROAS、归因、A/B 测试）
+
+【核心对话规则——严格遵守】
+① 绝不直接给答案或方案。哪怕你心里有答案，也不说。
+② 每次只问 1-3 个关键问题。不要连珠炮。
+③ 问题必须是开放式的、打开思考维度的，不要是封闭的是非题。
+④ 先点出这个问题属于八大模块的哪一块（或涉及几块），让对方建立框架意识。
+⑤ 如果发现对方思考有盲点，用"你有没有考虑过…"、"如果换个角度…"，不要用"你应该…"。
+⑥ 可以推荐框架名字（如 SWOT、JTBD）作为思考脚手架，但不帮对方填答案。
+⑦ 偶尔用类比、反例、反问来刺激思考。
+⑧ 回答简洁：通常 3-6 句话，最多一个短段落。不要 bullet 列表，不要长篇大论。
+⑨ 用"你"直接对话，像教练和学员的真诚对谈。
+⑩ 如果对方坚持要"标准答案"，温和地解释：营销没有标准答案，只有在具体情境下最合适的选择，而情境只有 ta 自己最清楚。
+
+【回答建议结构】
+- 一句话识别所属模块（如"这是典型的消费者洞察问题"）
+- 核心的 1-3 个启发性问题
+- 可选：一个简短的框架提示或反问
+
+现在开始对话。`;
+
+    // Build messages array (with history)
+    const historyText = marketingChatHistory.map(m =>
+      (m.role === 'user' ? '用户：' : '教练：') + m.content
+    ).join('\n\n');
+
+    const prompt = systemRules + '\n\n【以往对话】\n' + historyText + '\n\n请按规则给出教练的下一条回复（只回复教练说的话，不要加"教练："前缀）：';
+
+    const response = await callAI(prompt, 800);
+
+    // Remove loading
+    loadingEl.remove();
+
+    // Push coach reply
+    marketingChatHistory.push({ role: 'coach', content: response.trim() });
+    saveData('yuki_marketing_chat', marketingChatHistory);
+    renderMarketingChat();
+
+  } catch (err) {
+    loadingEl.remove();
+    marketingChatHistory.push({ role: 'coach', content: '⚠️ ' + err.message });
+    renderMarketingChat();
+  }
+
+  btn.disabled = false;
+  btn.textContent = '发送 →';
+}
+
+function resetMarketingChat() {
+  if (marketingChatHistory.length === 0) return;
+  if (!confirm('确定要清空对话记录，重新开始吗？')) return;
+  marketingChatHistory = [];
+  saveData('yuki_marketing_chat', marketingChatHistory);
+  renderMarketingChat();
+  showToast('对话已重置 ✓');
+}
+
+// ============================================================
+// KEYBOARD SHORTCUTS
+// ============================================================
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.activeElement.id === 'geoKeywordInput') addGeoKeyword();
+    if (document.activeElement.id === 'xhsSearchInput') searchXHS();
+    // Marketing chat: Enter = send, Shift+Enter = new line
+    if (document.activeElement.id === 'marketingChatInput' && !e.shiftKey) {
+      e.preventDefault();
+      sendMarketingChat();
+    }
+  }
+});
+
+// ============================================================
+// FEISHU INTEGRATION
+// ============================================================
+// Feishu iframe load handler
+const feishuFrame = document.getElementById('feishuFrame');
+const feishuOverlay = document.getElementById('feishuOverlay');
+if (feishuFrame && feishuOverlay) {
+  feishuFrame.addEventListener('load', () => {
+    feishuOverlay.style.opacity = '0';
+    setTimeout(() => { feishuOverlay.style.display = 'none'; }, 500);
+  });
+  setTimeout(() => {
+    if (feishuOverlay.style.display !== 'none') {
+      feishuOverlay.innerHTML = `
+        <div style="text-align:center;padding:40px;">
+          <div style="font-size:40px;margin-bottom:16px;">📊</div>
+          <div style="font-size:15px;color:var(--text-primary);margin-bottom:8px;font-weight:600;">飞书表格加载中</div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;line-height:1.6;">如果页面长时间未显示，请点击下方按钮在新窗口中打开。</div>
+          <a href="https://my.feishu.cn/sheets/XOMlskL1fhvvRgt2YRucs39jnAf?sheet=gCYBnd" target="_blank" class="btn btn-primary" style="text-decoration:none;pointer-events:auto;">📊 在新窗口中打开飞书</a>
+          <button class="btn" style="margin-left:8px;pointer-events:auto;" onclick="this.parentElement.parentElement.style.display='none'">已加载，关闭提示</button>
+        </div>`;
+      feishuOverlay.style.pointerEvents = 'auto';
+    }
+  }, 8000);
+}
+
+// Load saved Feishu config
+const savedFeishuConfig = loadData('yuki_feishu_config', null);
+if (savedFeishuConfig) {
+  const apiCard = document.getElementById('feishuApiCard');
+  if (apiCard) {
+    apiCard.style.display = 'block';
+    document.getElementById('feishuAppId').value = savedFeishuConfig.appId || '';
+    document.getElementById('feishuAppSecret').value = savedFeishuConfig.appSecret || '';
+    document.getElementById('feishuApiStatus').textContent = '已配置 ✓';
+    document.getElementById('feishuApiStatus').style.color = 'var(--success)';
+  }
+}
+
+function saveFeishuConfig() {
+  const appId = document.getElementById('feishuAppId').value.trim();
+  const appSecret = document.getElementById('feishuAppSecret').value.trim();
+  if (!appId || !appSecret) { showToast('请填写 App ID 和 App Secret'); return; }
+  saveData('yuki_feishu_config', { appId, appSecret });
+  document.getElementById('feishuApiStatus').textContent = '已配置 ✓';
+  document.getElementById('feishuApiStatus').style.color = 'var(--success)';
+  showToast('飞书配置已保存 ✓');
+}
+
+function toggleFeishuApi() {
+  const card = document.getElementById('feishuApiCard');
+  card.style.display = card.style.display === 'none' ? 'block' : 'none';
+}
+
+async function fetchFeishuData() {
+  const config = loadData('yuki_feishu_config', null);
+  if (!config || !config.appId || !config.appSecret) {
+    showToast('请先配置 App ID 和 App Secret');
+    return;
+  }
+
+  const preview = document.getElementById('feishuDataPreview');
+  const content = document.getElementById('feishuDataContent');
+  preview.style.display = 'block';
+  content.innerHTML = '<div class="spinner"></div>';
+
+  try {
+    // Step 1: Get tenant_access_token
+    const tokenRes = await fetch('https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        app_id: config.appId,
+        app_secret: config.appSecret
+      })
+    });
+    const tokenData = await tokenRes.json();
+    
+    if (tokenData.code !== 0) {
+      content.textContent = '认证失败: ' + (tokenData.msg || '请检查 App ID 和 Secret');
+      return;
+    }
+
+    const token = tokenData.tenant_access_token;
+
+    // Step 2: Read spreadsheet data
+    const sheetToken = 'XOMlskL1fhvvRgt2YRucs39jnAf';
+    const sheetId = 'gCYBnd';
+    const range = `${sheetId}!A:Z`;
+    
+    const dataRes = await fetch(
+      `https://open.feishu.cn/open-apis/sheets/v2/spreadsheets/${sheetToken}/values/${range}`,
+      { headers: { 'Authorization': `Bearer ${token}` } }
+    );
+    const sheetData = await dataRes.json();
+
+    if (sheetData.code !== 0) {
+      content.textContent = '读取失败: ' + (sheetData.msg || '请检查表格权限');
+      return;
+    }
+
+    const values = sheetData.data?.valueRange?.values || [];
+    if (values.length === 0) {
+      content.textContent = '表格为空或无法读取';
+      return;
+    }
+
+    // Display data as a readable list
+    const headers = values[0] || [];
+    const today = new Date().toISOString().slice(0, 10);
+    let html = '<div style="font-size:13px;line-height:1.8;">';
+    html += '<div style="color:var(--accent-warm);margin-bottom:8px;font-weight:600;">📋 表格数据（前20行）</div>';
+    
+    values.slice(1, 21).forEach((row, idx) => {
+      html += '<div style="padding:8px 12px;border-bottom:1px solid var(--border);">';
+      headers.forEach((h, i) => {
+        if (row[i] !== undefined && row[i] !== null && row[i] !== '') {
+          html += `<span style="color:var(--text-muted);">${h}:</span> <strong>${row[i]}</strong>  `;
+        }
+      });
+      html += '</div>';
+    });
+    html += '</div>';
+    content.innerHTML = html;
+    showToast('飞书数据拉取成功 ✓');
+
+  } catch (err) {
+    content.textContent = '请求失败: ' + err.message + '\n\n提示：浏览器直接调用飞书 API 可能遇到跨域限制（CORS），如遇此问题需通过后端代理中转。详见配置指南。';
+  }
+}
+
+// Shimo iframe load handler
+const shimoFrame = document.getElementById('shimoFrame');
+const shimoOverlay = document.getElementById('shimoOverlay');
+if (shimoFrame && shimoOverlay) {
+  shimoFrame.addEventListener('load', () => {
+    shimoOverlay.style.opacity = '0';
+    setTimeout(() => { shimoOverlay.style.display = 'none'; }, 500);
+  });
+  shimoFrame.addEventListener('error', () => {
+    shimoOverlay.innerHTML = `
+      <div style="text-align:center;padding:40px;">
+        <div style="font-size:40px;margin-bottom:16px;">🔒</div>
+        <div style="font-size:15px;color:var(--text-primary);margin-bottom:8px;font-weight:600;">石墨文档无法在内嵌窗口中加载</div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;line-height:1.6;">部分网站出于安全策略限制了嵌入显示，请点击下方按钮在新窗口中打开。</div>
+        <a href="https://shimo.im/file-invite/gFCPabdhZfUybns96ehEsCgayeV26/" target="_blank" class="btn btn-primary" style="text-decoration:none;pointer-events:auto;">📄 打开石墨文档</a>
+      </div>`;
+    shimoOverlay.style.pointerEvents = 'auto';
+  });
+  // Fallback: after 8 seconds, show the overlay fallback if it's still visible
+  setTimeout(() => {
+    if (shimoOverlay.style.display !== 'none') {
+      // Check if iframe loaded successfully by trying to access it
+      try {
+        // If iframe blocked, just show the open button as a fallback
+        shimoOverlay.innerHTML = `
+          <div style="text-align:center;padding:40px;">
+            <div style="font-size:40px;margin-bottom:16px;">📄</div>
+            <div style="font-size:15px;color:var(--text-primary);margin-bottom:8px;font-weight:600;">石墨文档加载中</div>
+            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;line-height:1.6;">如果页面长时间未显示，请点击下方按钮在新窗口中打开。<br>如果已经加载成功，请忽略此提示。</div>
+            <a href="https://shimo.im/file-invite/gFCPabdhZfUybns96ehEsCgayeV26/" target="_blank" class="btn btn-primary" style="text-decoration:none;pointer-events:auto;">📄 在新窗口中打开</a>
+            <button class="btn" style="margin-left:8px;pointer-events:auto;" onclick="this.parentElement.parentElement.style.display='none'">已加载，关闭提示</button>
+          </div>`;
+        shimoOverlay.style.pointerEvents = 'auto';
+      } catch(e) {}
+    }
+  }, 8000);
+}
+
+// ============================================================
+// YUKI COPILOT AGENT
+// ============================================================
+let copilotChat = loadData(STORAGE_KEYS.copilotChat, []);
+let copilotIsLoading = false;
+let copilotBriefData = loadData(STORAGE_KEYS.copilotBriefData, null);
+
+function copilotInit() {
+  // 检查 brief 是否是今天的，不是则清空让用户主动刷新
+  const today = new Date().toISOString().slice(0, 10);
+  const briefDate = localStorage.getItem(STORAGE_KEYS.copilotBriefDate);
+  if (briefDate !== today) {
+    copilotBriefData = null;
+  }
+  renderCopilotBody();
+
+  // Ctrl+J / Cmd+J 唤起
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'j') {
+      e.preventDefault();
+      copilotToggle();
+    }
+    if (e.key === 'Escape') {
+      const drawer = document.getElementById('copilotDrawer');
+      if (drawer && drawer.classList.contains('open')) copilotClose();
+    }
+  });
+
+  // 给 FAB 加红点（如果有未读"高优先级"）
+  updateCopilotAlert();
+}
+
+function copilotToggle() {
+  const drawer = document.getElementById('copilotDrawer');
+  if (drawer.classList.contains('open')) {
+    copilotClose();
+  } else {
+    copilotOpen();
+  }
+}
+
+function copilotOpen() {
+  document.getElementById('copilotDrawer').classList.add('open');
+  document.getElementById('copilotBackdrop').classList.add('open');
+  setTimeout(() => {
+    document.getElementById('copilotInput').focus();
+    copilotScrollToBottom();
+  }, 100);
+}
+
+function copilotClose() {
+  document.getElementById('copilotDrawer').classList.remove('open');
+  document.getElementById('copilotBackdrop').classList.remove('open');
+}
+
+function copilotClearChat() {
+  if (!confirm('清空所有对话记录？早间简报会保留。')) return;
+  copilotChat = [];
+  saveData(STORAGE_KEYS.copilotChat, copilotChat);
+  renderCopilotBody();
+}
+
+function copilotInputAutoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function copilotInputKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    copilotSend();
+  }
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ============================================================
+// 数据快照：拼装 Workshop 当前状态给 LLM 看
+// ============================================================
+function copilotSnapshot() {
+  const today = new Date().toISOString().slice(0, 10);
+
+  // 今日日程
+  const todayEvents = (calendarEvents || []).map(ev => ({
+    time: `${ev.start}-${ev.end}`,
+    title: ev.title,
+    desc: ev.desc || ''
+  }));
+
+  // GEO 关键词及最近 7 天记录
+  const recentGeoCutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const recentGeoRecords = (geoRecords || []).filter(r => {
+    const ts = r.timestamp || (r.date ? new Date(r.date).getTime() : 0);
+    return ts >= recentGeoCutoff;
+  });
+  const geoSummary = (geoKeywords || []).map(kw => {
+    const text = typeof kw === 'string' ? kw : (kw.text || kw.keyword || '');
+    const records = recentGeoRecords.filter(r => (r.keyword || '') === text);
+    return { keyword: text, recent_records: records.length, last_status: records[0]?.status || 'unknown' };
+  });
+
+  // 小红书舆情最近 7 天负面
+  const xhsRecentNegative = (xhsLogs || []).filter(l => {
+    const t = l.timestamp || (l.date ? new Date(l.date).getTime() : 0);
+    return t >= recentGeoCutoff && (l.sentiment === 'negative' || l.type === 'negative');
+  }).slice(0, 5);
+
+  // 团队成员
+  const team = (teamMembers || []).map(m => ({ name: m.name || m, role: m.role || '' }));
+
+  // 今日 check-in
+  const todayCheckins = checkins?.[today] || {};
+
+  return {
+    today_date: today,
+    today_events: todayEvents,
+    geo_keywords_summary: geoSummary,
+    xhs_recent_negative: xhsRecentNegative.map(l => ({
+      time: l.date || new Date(l.timestamp || Date.now()).toLocaleString('zh-CN'),
+      content: (l.content || l.text || '').slice(0, 200)
+    })),
+    team_members: team,
+    today_checkins: todayCheckins,
+    has_api_key: !!localStorage.getItem('yuki_deepseek_key')
+  };
+}
+
+// ============================================================
+// 早间简报：基于数据快照生成今日 5 件事
+// ============================================================
+async function copilotGenerateBrief() {
+  if (!localStorage.getItem('yuki_deepseek_key')) {
+    copilotBriefData = { error: '⚠️ 还没配置 DeepSeek API Key。请点页面右上角「⚙️ 设置」填入 Key 后再试。' };
+    renderCopilotBody();
+    return;
+  }
+  copilotBriefData = { loading: true };
+  renderCopilotBody();
+
+  const snap = copilotSnapshot();
+  const prompt = `你是 Yuki 的私人工作副驾。Yuki 是 UKEC（英国留学机构）的品牌公关经理，每天工作非常碎片化。
+
+下面是她今天的 Workshop 数据快照：
+
+${JSON.stringify(snap, null, 2)}
+
+请你基于这些数据，生成"今日 5 件事"——按优先级从高到低排序。判断逻辑：
+1. 有 24 小时内的小红书负面 → 高优先级
+2. 有 GEO 关键词最近 3 天没被推荐 → 中-高优先级
+3. 今天日程里的硬性 deadline / 重要会议 → 中优先级
+4. 团队成员长时间没 check-in / 有异常 → 中优先级
+5. 没有数据时，给一些通用的"今天值得做"建议（比如本周的 GEO 巡检、内容日历查看）
+
+输出严格的 JSON，不要任何其他文字、不要 markdown 代码块包裹，格式：
+{
+  "items": [
+    { "priority": "high|med|low", "icon": "🚨", "text": "一句话说明这件事", "meta": "来源/上下文，比如「来自 GEO 监测」" }
+  ]
+}
+
+要求：
+- 最多 5 条
+- "text" 必须具体、可行动，不要"建议加强 XX"这种空话
+- 如果数据为空，正常给通用建议，priority 都用 "low"
+- 用 emoji 让 icon 直观（🚨 紧急、📡 GEO、💬 舆情、👥 团队、📅 日程、✍️ 内容）`;
+
+  try {
+    const result = await callAI(prompt, 800, null, { jsonMode: true });
+    const data = robustJsonParse(result);
+    if (!data || !data.items) {
+      throw new Error('返回的内容不是预期格式：\n' + result.slice(0, 200));
+    }
+    copilotBriefData = data;
+    saveData(STORAGE_KEYS.copilotBriefData, data);
+    localStorage.setItem(STORAGE_KEYS.copilotBriefDate, new Date().toISOString().slice(0, 10));
+    renderCopilotBody();
+    updateCopilotAlert();
+  } catch (err) {
+    console.error('[Copilot Brief Error]', err);
+    copilotBriefData = { error: err.message };
+    renderCopilotBody();
+  }
+}
+
+// 鲁棒的 JSON 解析：剥离 markdown、抽取 {...}、最终兜底
+function robustJsonParse(raw) {
+  if (!raw) return null;
+  let s = String(raw).trim();
+  // 1. 剥离 ```json ... ``` 包裹
+  s = s.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+  // 2. 直接试
+  try { return JSON.parse(s); } catch {}
+  // 3. 提取最外层 { ... }
+  const start = s.indexOf('{');
+  const end = s.lastIndexOf('}');
+  if (start >= 0 && end > start) {
+    const sub = s.slice(start, end + 1);
+    try { return JSON.parse(sub); } catch {}
+  }
+  return null;
+}
+
+function updateCopilotAlert() {
+  const fab = document.getElementById('copilotFab');
+  if (!fab) return;
+  const hasHigh = copilotBriefData?.items?.some(i => i.priority === 'high');
+  if (hasHigh) {
+    fab.classList.add('has-alert');
+  } else {
+    fab.classList.remove('has-alert');
+  }
+}
+
+// ============================================================
+// 渲染对话主区
+// ============================================================
+function renderCopilotBody() {
+  const body = document.getElementById('copilotBody');
+  if (!body) return;
+
+  let html = '';
+
+  // 早间简报卡片
+  html += `<div class="copilot-brief">
+    <div class="copilot-brief-header">
+      <div class="copilot-brief-title">📋 今日值得关注</div>
+      <button class="copilot-brief-refresh" onclick="copilotGenerateBrief()">${copilotBriefData?.items ? '🔄 重新扫描' : '⚡ 一键扫描 Workshop'}</button>
+    </div>`;
+
+  if (copilotBriefData?.loading) {
+    html += `<div class="copilot-brief-empty">
+      <span class="copilot-loading-dots"><span></span><span></span><span></span></span>
+      <div style="margin-top:10px;">正在扫描你的所有模块...</div>
+    </div>`;
+  } else if (copilotBriefData?.error) {
+    html += `<div class="copilot-brief-empty" style="color:var(--accent-coral);">
+      ⚠️ ${escapeHtml(copilotBriefData.error)}
+    </div>`;
+  } else if (copilotBriefData?.items?.length) {
+    html += `<div class="copilot-brief-list">`;
+    copilotBriefData.items.forEach((item, idx) => {
+      html += `<div class="copilot-brief-item" onclick="copilotAskAboutBrief(${idx})">
+        <div class="copilot-brief-priority ${item.priority || 'low'}">${item.icon || '·'}</div>
+        <div class="copilot-brief-content">
+          <div class="copilot-brief-text">${escapeHtml(item.text || '')}</div>
+          ${item.meta ? `<div class="copilot-brief-meta">${escapeHtml(item.meta)}</div>` : ''}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  } else {
+    html += `<div class="copilot-brief-empty">
+      点击右上「⚡ 一键扫描」，我会读你的日程、GEO、舆情、团队 Check-in，给你今天最值得做的 5 件事。
+    </div>`;
+  }
+  html += `</div>`;
+
+  // 对话历史
+  if (copilotChat.length === 0) {
+    html += `<div class="copilot-msg assistant">
+      <div class="copilot-msg-avatar">🤖</div>
+      <div class="copilot-msg-bubble">
+你好 Yuki，我是你的副驾。
+
+我跟普通 AI 助手不一样——我能看到你 Workshop 里的所有数据：日程、GEO 监测、舆情、团队 Check-in。所以你不用每次都从头解释背景。
+
+而且我会把每一步**怎么想的**都展示给你，你看得见、也能改。
+
+试试这些问题：
+        <div class="copilot-suggestions">
+          <button class="copilot-suggestion" onclick="copilotQuickAsk('UKEC 这周在小红书上口碑如何？')">UKEC 这周在小红书上口碑如何？</button>
+          <button class="copilot-suggestion" onclick="copilotQuickAsk('GEO 监测里哪些关键词需要补内容？')">GEO 监测里哪些关键词需要补内容？</button>
+          <button class="copilot-suggestion" onclick="copilotQuickAsk('帮我写一条小红书种草文案，主题是英国硕士申请')">帮我写一条小红书种草文案</button>
+          <button class="copilot-suggestion" onclick="copilotQuickAsk('我下周要跟老板汇报，先帮我梳理这周做了什么')">下周要汇报，帮我梳理本周</button>
+        </div>
+      </div>
+    </div>`;
+  } else {
+    copilotChat.forEach(msg => {
+      if (msg.role === 'user') {
+        html += `<div class="copilot-msg user">
+          <div class="copilot-msg-avatar">Y</div>
+          <div class="copilot-msg-bubble">${escapeHtml(msg.content)}</div>
+        </div>`;
+      } else {
+        html += `<div class="copilot-msg assistant">
+          <div class="copilot-msg-avatar">🤖</div>
+          <div class="copilot-msg-bubble">`;
+
+        // 思考过程
+        if (msg.thinking && msg.thinking.length) {
+          html += `<div class="copilot-thinking">
+            <div class="copilot-thinking-label">🧠 思考过程（看得见，也能改）</div>
+            ${msg.thinking.map(t => `<div class="copilot-thinking-step">${escapeHtml(t)}</div>`).join('')}
+          </div>`;
+        }
+
+        // 主体内容
+        if (msg.content) {
+          html += `<div style="margin-top:${msg.thinking?.length ? '10px' : '0'};">${escapeHtml(msg.content)}</div>`;
+        }
+
+        // 操作按钮
+        if (msg.actions && msg.actions.length) {
+          html += `<div class="copilot-action-row">`;
+          msg.actions.forEach((a, i) => {
+            html += `<button class="copilot-action-btn" onclick="copilotRunAction('${msg.id}', ${i})">${escapeHtml(a.label)}</button>`;
+          });
+          html += `</div>`;
+        }
+
+        html += `</div></div>`;
+      }
+    });
+  }
+
+  // Loading
+  if (copilotIsLoading) {
+    html += `<div class="copilot-msg assistant">
+      <div class="copilot-msg-avatar">🤖</div>
+      <div class="copilot-msg-bubble">
+        <span class="copilot-loading-dots"><span></span><span></span><span></span></span>
+        <span style="margin-left:8px;color:var(--text-secondary);font-size:12px;">正在思考...</span>
+      </div>
+    </div>`;
+  }
+
+  body.innerHTML = html;
+  copilotScrollToBottom();
+}
+
+function copilotScrollToBottom() {
+  const body = document.getElementById('copilotBody');
+  if (body) body.scrollTop = body.scrollHeight;
+}
+
+function copilotQuickAsk(text) {
+  document.getElementById('copilotInput').value = text;
+  copilotSend();
+}
+
+function copilotAskAboutBrief(idx) {
+  const item = copilotBriefData?.items?.[idx];
+  if (!item) return;
+  copilotQuickAsk(`针对今日简报里的这条："${item.text}"，给我具体的下一步动作。`);
+}
+
+// ============================================================
+// 核心：发送消息 + Agent 路由
+// ============================================================
+async function copilotSend() {
+  const input = document.getElementById('copilotInput');
+  const text = input.value.trim();
+  if (!text || copilotIsLoading) return;
+
+  if (!localStorage.getItem('yuki_deepseek_key')) {
+    // 不只是 toast，直接在对话区显示明显的引导
+    copilotChat.push({ role: 'user', content: text, ts: Date.now() });
+    copilotChat.push({
+      role: 'assistant',
+      content: '⚠️ 还没配置 DeepSeek API Key，副驾跑不起来。\n\n请关闭副驾 → 点页面右上角「⚙️ 设置」→ 填入你的 API Key（前往 platform.deepseek.com 免费注册即可获取，新用户赠送 500 万 tokens）→ 配好后回来重新发消息。',
+      ts: Date.now(),
+      id: 'm' + Date.now()
+    });
+    saveData(STORAGE_KEYS.copilotChat, copilotChat);
+    input.value = '';
+    input.style.height = 'auto';
+    renderCopilotBody();
+    return;
+  }
+
+  // 加入用户消息
+  copilotChat.push({ role: 'user', content: text, ts: Date.now() });
+  input.value = '';
+  input.style.height = 'auto';
+  copilotIsLoading = true;
+  saveData(STORAGE_KEYS.copilotChat, copilotChat);
+  renderCopilotBody();
+
+  try {
+    const reply = await copilotAgentRespond(text);
+    copilotChat.push({ ...reply, role: 'assistant', ts: Date.now(), id: 'm' + Date.now() });
+    saveData(STORAGE_KEYS.copilotChat, copilotChat);
+  } catch (err) {
+    console.error('[Copilot Send Error]', err);
+    copilotChat.push({
+      role: 'assistant',
+      content: '⚠️ 出错了：\n\n' + err.message + '\n\n（详情可按 F12 打开控制台查看）',
+      ts: Date.now(),
+      id: 'm' + Date.now()
+    });
+    saveData(STORAGE_KEYS.copilotChat, copilotChat);
+  } finally {
+    copilotIsLoading = false;
+    renderCopilotBody();
+  }
+}
+
+// Agent 核心：把用户问题 + 数据快照 + 历史 一起给 LLM，
+// 让它产出 (思考过程 + 答案 + 建议动作)
+async function copilotAgentRespond(userText) {
+  const snap = copilotSnapshot();
+  const recentChat = copilotChat.slice(-6).map(m => ({
+    role: m.role,
+    content: m.content
+  }));
+
+  const systemPrompt = `你是 Yuki 的私人工作副驾。Yuki 是 UKEC（英国留学机构，1999年成立于英国曼彻斯特，主营英国/香港留学申请）的品牌公关经理，4 年经验，带 4 人团队。
+
+你跟通用 Agent 的核心区别是 **"思考过程必须可见"**。Yuki 的原则是 AI 不替她做决定，只帮她把判断之前的活做完。所以你必须：
+
+1. 永远先展示"思考过程"（thinking），让 Yuki 看见你怎么想的
+2. 拒绝套路化的"标准答案"。"先做用户画像、再做定位、再做内容矩阵"这种通用 framework 她看了 4 年了，请直接给具体判断
+3. 具体优先于抽象。不要"建议加强情感连接"，要"建议把这句改成 XXX"
+4. 结论先行，先给判断/建议，再给推理
+5. 舆情类问题保守谨慎，留学是高信任成本决策
+6. 不要假设她能调动大资源，团队就 4 人，给"下周就能落地"的方案
+7. 不要重复确认需求，直接动笔
+
+你能看到 Yuki 的 Workshop 实时数据快照（下方），可以基于真实数据给建议。
+
+你的输出**必须是严格的 JSON**，不要任何 markdown 代码块包裹，格式：
+{
+  "thinking": ["第一步：我看到她在问 XXX", "第二步：从数据快照看，YYY", "第三步：结论是 ZZZ"],
+  "content": "给 Yuki 看的实际答案，结论先行，可以分段，用 \\n 分行",
+  "actions": [
+    { "label": "📡 跳转 GEO 监测", "type": "switch_tab", "payload": "geo" },
+    { "label": "✍️ 用此 prompt", "type": "open_prompt", "payload": "p03" }
+  ]
+}
+
+action 的 type 只能是这些：
+- "switch_tab"：跳转某个 tab，payload 是 tab id：calendar / poster / geo / writer / xhs / team / emotion / enneagram / marketing / prompts
+- "open_prompt"：打开 Prompt 库的某个 prompt，payload 是 id（p01 到 p16）
+- "copy_text"：复制一段文字，payload 是要复制的内容
+- "none"：不需要按钮
+
+actions 字段是可选的，没有就不要这个字段。
+最多 3 个 action 按钮。
+thinking 至少 2 步，最多 4 步，每步一句话即可。`;
+
+  const fullPrompt = `${systemPrompt}
+
+==== Workshop 数据快照 ====
+${JSON.stringify(snap, null, 2)}
+
+==== 最近对话历史 ====
+${JSON.stringify(recentChat, null, 2)}
+
+==== Yuki 当前的问题 ====
+${userText}
+
+请输出 JSON。`;
+
+  const result = await callAI(fullPrompt, 1800, null, { jsonMode: true });
+  console.log('[Copilot Raw Response]', result);
+
+  const parsed = robustJsonParse(result);
+  if (!parsed) {
+    // JSON 解析失败，把原文当成 content 返回
+    return {
+      thinking: ['模型这次没按 JSON 格式回，直接把它的原始输出给你看'],
+      content: result.trim()
+    };
+  }
+
+  return {
+    thinking: parsed.thinking || [],
+    content: parsed.content || '（模型未返回 content 字段）',
+    actions: parsed.actions || []
+  };
+}
+
+// ============================================================
+// 执行 action 按钮
+// ============================================================
+function copilotRunAction(msgId, actionIdx) {
+  const msg = copilotChat.find(m => m.id === msgId);
+  if (!msg || !msg.actions || !msg.actions[actionIdx]) return;
+  const action = msg.actions[actionIdx];
+
+  switch (action.type) {
+    case 'switch_tab':
+      copilotClose();
+      const tabBtn = document.querySelector(`.nav-tab[onclick*="'${action.payload}'"]`);
+      if (tabBtn) {
+        tabBtn.click();
+        showToast(`已跳转 · ${action.label}`);
+      } else {
+        showToast('未找到对应模块');
+      }
+      break;
+
+    case 'open_prompt':
+      copilotClose();
+      // 切到 prompt 库 tab
+      const promptTab = document.querySelector('.nav-tab[onclick*="\'prompts\'"]');
+      if (promptTab) promptTab.click();
+      // 打开对应 prompt
+      setTimeout(() => {
+        if (typeof openPromptModal === 'function') {
+          openPromptModal(action.payload);
+        }
+      }, 200);
+      break;
+
+    case 'copy_text':
+      navigator.clipboard.writeText(action.payload || '').then(() => {
+        showToast('已复制到剪贴板');
+      }).catch(() => {
+        showToast('复制失败');
+      });
+      break;
+
+    default:
+      break;
+  }
+}
+
+// ============================================================
+// END YUKI COPILOT AGENT
+// ============================================================
+
+// Initialize
+init();
+</script>
+</body>
+</html>
